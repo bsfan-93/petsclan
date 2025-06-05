@@ -1,0 +1,30 @@
+{
+  "appName": "Pet Tech Store",
+  "topBar": {
+    "promo": {
+      "newUserDiscount20": "20% Off for New Users Upon Registration!"
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "shop": "Shop",
+    "shop_all": "All Products",
+    "shop_category1": "Smart Feeders",
+    "aboutUs": "About Us",
+    "aboutUs_story": "Our Story",
+    "app": "App",
+    "language": "Language",
+    "searchPlaceholder": "Search products..."
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty.",
+    "total": "Total",
+    "viewCart": "View Cart",
+    "checkout": "Proceed to Checkout"
+  },
+  "search": {
+    "history": "Search History",
+    "noHistory": "No search history."
+  }
+}

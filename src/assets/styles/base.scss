@@ -1,0 +1,41 @@
+// src/assets/styles/base.scss
+@import 'normalize.css'; // 引入 normalize.css
+@import 'normalize.css'; 
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+  color: var(--el-text-color-primary); // 使用 Element Plus 的 CSS 变量
+  background-color: var(--el-bg-color-page);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 14px; // 全局基础字号
+}
+
+a {
+  color: var(--el-color-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  &:hover {
+    color: var(--el-color-primary-light-3);
+    text-decoration: none; // 根据设计决定是否需要下划线
+  }
+}
+
+// 全局容器最大宽度限制 (可选)
+.container {
+max-width: 1200px;
+margin-left: auto;
+margin-right: auto;
+padding-left: 15px;
+padding-right: 15px;
+}
+
+// 隐藏滚动条但允许滚动 (特定场景使用)
+.scrollbar-hidden {
+-ms-overflow-style: none;  /* IE and Edge /
+scrollbar-width: none;  / Firefox /
+&::-webkit-scrollbar {
+display: none; / Chrome, Safari, Opera */
+}
+// }

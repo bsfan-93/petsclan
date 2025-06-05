@@ -1,0 +1,67 @@
+// src/assets/styles/variables.scss
+
+/* 覆盖 Element Plus 默认 SCSS 变量 */
+/* 例如，修改主题色、文字颜色、边框圆角等 */
+
+// 必须首先 @forward Element Plus 的原始变量定义，然后在其后用 `with` 覆盖
+// 确保路径正确指向 node_modules 中的文件
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  // 基础颜色
+  $colors: (
+    'primary': (
+      // 宠物科技主题色，例如一种友好的绿色或科技感的蓝色
+      'base': #28a745, // 示例：友好的绿色
+    ),
+    'success': (
+      'base': #20c997,
+    ),
+    'warning': (
+      'base': #ffc107,
+    ),
+    'danger': (
+      'base': #dc3545,
+    ),
+    'error': (
+      'base': #dc3545,
+    ),
+    'info': (
+      'base': #6c757d,
+    )
+  ),
+
+  // 字体颜色
+  // $text-color: (
+  //   'primary': #303133,
+  //   'regular': #606266,
+  //   'secondary': #909399,
+  //   'placeholder': #c0c4cc,
+  // ),
+
+  // 边框圆角
+  // $border-radius: (
+  //   'base': 4px,
+  //   'small': 2px,
+  //   'round': 20px,
+  //   'circle': 100%,
+  // ),
+
+  // 组件特定变量 (根据需要添加)
+  // 例如，按钮高度、输入框颜色等
+  // $button: (
+  //   'font-weight': 500,
+  // ),
+  $font-size: (
+    'extra-large': 20px,
+    'large': 18px,
+    'medium': 16px, // 稍微增大默认字体
+    'base': 14px,
+    'small': 13px,
+    'extra-small': 12px,
+  )
+);
+
+// 如果需要覆盖非颜色类变量，也在此处进行
+// 例如：修改默认字体
+// $font-family: (
+//   '': '"Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "\\5FAE软雅黑", Arial, sans-serif', // Element Plus 默认字体栈
+// );

@@ -1,0 +1,12 @@
+// src/assets/styles/index.scss
+
+// 如果 variables.scss 主要用于覆盖 Element Plus 变量并通过 additionalData 注入，
+// 此处可能不需要再次导入 variables.scss，除非其中包含其他全局 SCSS 变量或 mixin。
+// @use 'variables' as *; // 如果需要在此处访问变量
+
+@import 'base'; // 导入基础样式
+@import 'normalize.css'; 
+
+// 其他全局样式模块
+// @import 'typography';
+// @import 'layout-helpers';

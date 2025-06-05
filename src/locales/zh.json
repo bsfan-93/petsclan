@@ -1,0 +1,30 @@
+{
+  "appName": "宠物科技商店",
+   "topBar": {
+    "promo": {
+      "newUserDiscount20": "新用户注册即享八折优惠！" 
+    }
+  },
+  "nav": {
+    "home": "首页",
+    "shop": "商城",
+    "shop_all": "所有商品",
+    "shop_category1": "智能喂食器",
+    "aboutUs": "关于我们",
+    "aboutUs_story": "我们的故事",
+    "app": "App下载",
+    "language": "语言",
+    "searchPlaceholder": "搜索商品..."
+  },
+  "cart": {
+    "title": "购物车",
+    "empty": "您的购物车是空的。",
+    "total": "总计",
+    "viewCart": "查看购物车",
+    "checkout": "去结算"
+  },
+  "search": {
+    "history": "搜索历史",
+    "noHistory": "暂无搜索历史。"
+  }
+}
