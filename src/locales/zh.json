@@ -1,30 +1,44 @@
 {
-  "appName": "宠物科技商店",
-   "topBar": {
+  "appName": "宠物部落",
+  "topBar": {
     "promo": {
-      "newUserDiscount20": "新用户注册即享八折优惠！" 
+      "newUserDiscount20": "新用户注册即享八折优惠！"
     }
   },
   "nav": {
     "home": "首页",
     "shop": "商城",
-    "shop_all": "所有商品",
-    "shop_category1": "智能喂食器",
     "aboutUs": "关于我们",
-    "aboutUs_story": "我们的故事",
-    "app": "App下载",
-    "language": "语言",
-    "searchPlaceholder": "搜索商品..."
+    "app": "App下载"
   },
-  "cart": {
-    "title": "购物车",
-    "empty": "您的购物车是空的。",
-    "total": "总计",
-    "viewCart": "查看购物车",
-    "checkout": "去结算"
-  },
-  "search": {
-    "history": "搜索历史",
-    "noHistory": "暂无搜索历史。"
+  "footer": {
+    "company": {
+      "title": "公司",
+      "about_us": "关于我们",
+      "blog": "博客",
+      "privacy_policy": "隐私政策",
+      "terms_of_service": "服务条款"
+    },
+    "support": {
+      "title": "支持",
+      "faq": "常见问题",
+      "contact_us": "联系我们",
+      "app_service": "应用服务",
+      "user_manual": "用户手册",
+      "shipping_policy": "配送政策",
+      "warranty_policy": "保修政策",
+      "price_match_policy": "价格匹配政策",
+      "return_refund_policy": "退换货政策"
+    },
+    
+    "how_it_works": {
+      "title": "工作原理",
+      "user_manual": "用户手册"
+    },
+    "signup": {
+      "title": "注册获取首单九折优惠",
+      "email_placeholder": "邮箱"
+    },
+    "download_app": "下载App"
   }
 }

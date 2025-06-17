@@ -1,3 +1,4 @@
+<!-- 页眉 -->
 <template>
   <header class="app-header" ref="appHeaderRef" id="appHeaderScrollContainer"> 
     <TopNotification @height-change="updateNotificationHeight" />

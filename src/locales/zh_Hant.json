@@ -1,5 +1,5 @@
 {
-  "appName": "寵物科技商店",
+  "appName": "寵物部落",
   "topBar": {
     "promo": {
       "newUserDiscount20": "新用戶註冊即享八折優惠！"
@@ -8,23 +8,36 @@
   "nav": {
     "home": "首頁",
     "shop": "商城",
-    "shop_all": "所有商品",
-    "shop_category1": "智能餵食器",
     "aboutUs": "關於我們",
-    "aboutUs_story": "我們的故事",
-    "app": "App下載",
-    "language": "語言",
-    "searchPlaceholder": "搜索商品..."
+    "app": "App下載"
   },
-  "cart": {
-    "title": "購物車",
-    "empty": "您的購物車是空的。",
-    "total": "總計",
-    "viewCart": "查看購物車",
-    "checkout": "去結算"
-  },
-  "search": {
-    "history": "搜索歷史",
-    "noHistory": "暫無搜索歷史。"
+  "footer": {
+    "company": {
+      "title": "公司",
+      "about_us": "關於我們",
+      "blog": "部落格",
+      "privacy_policy": "隱私權政策",
+      "terms_of_service": "服務條款"
+    },
+    "support": {
+      "title": "支援",
+      "faq": "常見問題",
+      "contact_us": "聯絡我們",
+      "app_service": "應用程式服務",
+      "user_manual": "使用者手冊",
+      "shipping_policy": "配送政策",
+      "warranty_policy": "保固政策",
+      "price_match_policy": "價格匹配政策",
+      "return_refund_policy": "退換貨政策"
+    },
+    "how_it_works": {
+      "title": "運作方式",
+      "user_manual": "使用者手冊"
+    },
+    "signup": {
+      "title": "註冊獲取首單九折優惠",
+      "email_placeholder": "電子郵箱"
+    },
+    "download_app": "下載App"
   }
 }

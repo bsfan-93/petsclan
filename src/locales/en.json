@@ -1,5 +1,5 @@
 {
-  "appName": "Pet Tech Store",
+  "appName": "Pets Clan",
   "topBar": {
     "promo": {
       "newUserDiscount20": "20% Off for New Users Upon Registration!"
@@ -8,23 +8,32 @@
   "nav": {
     "home": "Home",
     "shop": "Shop",
-    "shop_all": "All Products",
-    "shop_category1": "Smart Feeders",
     "aboutUs": "About Us",
-    "aboutUs_story": "Our Story",
-    "app": "App",
-    "language": "Language",
-    "searchPlaceholder": "Search products..."
+    "app": "App"
   },
-  "cart": {
-    "title": "Shopping Cart",
-    "empty": "Your cart is empty.",
-    "total": "Total",
-    "viewCart": "View Cart",
-    "checkout": "Proceed to Checkout"
-  },
-  "search": {
-    "history": "Search History",
-    "noHistory": "No search history."
+  "footer": {
+    "company": {
+      "title": "Company",
+      "about_us": "About US",
+      "blog": "Blog",
+      "privacy_policy": "Privacy Policy",
+      "terms_of_service": "Terms of Service"
+    },
+    "support": {
+      "title": "Support",
+      "faq": "FAQ",
+      "contact_us": "Contact us",
+      "app_service": "App Service",
+      "user_manual": "User Manual",
+      "shipping_policy": "Shipping Policy"
+    },
+    "how_it_works": {
+      "title": "How It Works",
+      "user_manual": "User Manual"
+    },
+    "signup": {
+      "title": "Sign up for 10% off your first order",
+      "email_placeholder": "E-mail"
+    }
   }
 }

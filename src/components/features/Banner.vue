@@ -1,157 +1,179 @@
 <template>
-  <div class="banner-component-wrapper">
-    <div v-if="loading" class="banner-loading">
-      Loading banners...
-    </div>
-    <div v-else-if="errorMessage" class="banner-error">
-      <p>Error loading banners: {{ errorMessage }}</p>
-      </div>
+  <div class="banner-wrapper">
     <el-carousel
-      v-else-if="bannerListItems && bannerListItems.length > 0"
-      :interval="3000" arrow="hover" indicator-position="outside" class="banner-carousel custom-indicator-placement"
-      height="610px" motion-blur >
-      <el-carousel-item v-for="(item, index) in bannerListItems" :key="item.originalUrl || item.imageUrl || index">
-        <div class="carousel-item-content">
-          <a v-if="item.linkUrl" :href="item.linkUrl" target="_blank" rel="noopener noreferrer" class="banner-link">
-            <img :src="item.imageUrl" :alt="item.altText || `Banner ${index + 1}`" class="banner-image-carousel" />
-          </a>
-          <img v-else :src="item.imageUrl" :alt="item.altText || `Banner ${index + 1}`" class="banner-image-carousel" />
+      v-if="bannerListItems && bannerListItems.length > 0"
+      :interval="5000"
+      arrow="hover"
+      class="banner-carousel"
+      height="85vh"
+    >
+      <el-carousel-item v-for="item in bannerListItems" :key="item.id || item.imageUrl">
+        <div class="carousel-item-container">
+          <img :src="item.imageUrl" :alt="item.altText" class="banner-image">
+
+          <div class="banner-content-overlay">
+            <div class="banner-text-content">
+              <h1>Scientific & Healthy</h1>
+              <h2>For Pets</h2>
+            </div>
+            
+            <router-link to="/shop/all" custom v-slot="{ navigate }">
+              <el-button
+                class="shop-now-button"
+                @click="navigate"
+              >
+                SHOP NOW
+              </el-button>
+            </router-link>
+          </div>
         </div>
       </el-carousel-item>
     </el-carousel>
-    <div v-else class="banner-empty">
-      <p>No banners to display at the moment.</p>
+    <div v-else class="banner-placeholder">
+      <p>Banner is loading or not available.</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+// Script 部分无需改动
 import { ref, onMounted } from 'vue';
-// Assuming fetchBannerDetails and ApiBannerData are correctly imported from your service
 import { fetchBannerDetails, type ApiBannerData } from '@/services/apiClient';
 
-const bannerListItems = ref<ApiBannerData[] | null>(null);
-const loading = ref(true);
-const errorMessage = ref<string | null>(null);
+const bannerListItems = ref<ApiBannerData[]>([]);
 
 onMounted(async () => {
-  try {
-    loading.value = true;
-    errorMessage.value = null;
-    const dataArray = await fetchBannerDetails();
-
-    if (dataArray && dataArray.length > 0) {
-      bannerListItems.value = dataArray;
-    } else {
-      bannerListItems.value = []; // Set to empty array if no data, to distinguish from null/loading
-      console.warn('No banner items were received or processed.');
-    }
-  } catch (e: any) {
-    console.error('Failed to load banner items in Banner.vue:', e);
-    errorMessage.value = e.message || 'An unknown error occurred while fetching banners.';
-  } finally {
-    loading.value = false;
-  }
+  const data = await fetchBannerDetails();
+  let dataArray: ApiBannerData[] = [];
+  if (Array.isArray(data)) { dataArray = data; }
+  else if (data) { dataArray = [data]; }
+  bannerListItems.value = dataArray;
 });
 </script>
 
+<!-- banner图尺寸调整 -->
 <style scoped lang="scss">
-.banner-component-wrapper {
-  // If the banner is placed in a section that has padding,
-  // you might want to ensure this wrapper doesn't add extra.
-  // Or, it could define a specific background for the banner area.
-  width: 100%;
+.banner-wrapper {
+  height: 83vh;
+  min-height: 400px;
+  max-height: 900px;
+  line-height: 1;
+  background-color: #f0f2f5;
 }
 
+// 轮播项的容器，作为定位的基准
+.carousel-item-container {
+  width: 100%;
+  height: 100%;
+  position: relative; // 关键：为绝对定位的子元素提供锚点
+  overflow: hidden;
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; // 确保图片铺满背景
+}
+
+// 轮播图组件的整体样式
 .banner-carousel {
-  // The height is set via the `height` prop on el-carousel.
-  // You can add other styling like borders or shadows here if needed.
-  border-radius: var(--el-border-radius-base); // Optional: match your theme
-  overflow: hidden; // Good practice for carousels
-}
-
-.carousel-item-content {
-  width: 100%;
   height: 100%;
-  display: flex;       // To center image if it's smaller or control its position
-  justify-content: center;
-  align-items: center;
-  background-color: #f0f2f5; // Placeholder background for slides, visible if image is smaller or transparent
+
+  :deep(.el-carousel__container) {
+    height: 100% !important;
+  }
+
+  // --- START: 指示器样式 (您期望的长条形、右下角样式) ---
+  :deep(.el-carousel__indicators) {
+    position: absolute;
+    bottom: 70px; // 指示器组距离底部的距离
+    right: 100px;  // 指示器组距离右侧的距离
+    left: auto;     // 重置 left 属性
+    transform: none;  // 重置 transform 属性
+    flex-direction: row;   // 如果指示器默认是垂直排列的，确保它们水平排列
+  }
+
+   // 目标：每个指示器的按钮部分 (li > div)
+  :deep(.el-carousel__indicator .el-carousel__button) {
+    width: 60px;    // 未激活状态下的宽度
+    height: 10px;   // 高度
+    border-radius: 12px;    // 轻微的圆角
+    background-color: #ffffff;    // 设置未激活状态下的背景色和透明度
+    opacity: 0.4;   // 半透明效果
+    transition: all 0.3s ease-in-out;  
+  }
+  // 目标：当前激活的那个指示器
+  :deep(.el-carousel__indicator.is-active .el-carousel__button) {
+    width: 60px;    // 激活时变得更长，并且完全不透明
+    opacity: 1;
+  }
+  
 }
 
-.banner-link {
-  display: block; // Make the link take up space
-  width: 100%;
-  height: 100%;
+
+// --- START: 内容覆盖层样式 (控制文字和按钮的整体位置) ---
+.banner-content-overlay {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  
+  // 在这里调整文字和按钮这个“整体”的位置
+  bottom: 12%; // 距离底部的距离
+  left: 10%;   // 距离左侧的距离
+}
+// --- END: 内容覆盖层样式 ---
+
+.banner-text-content {
+  color: #ffffff;
+  h1, h2 {
+    margin: 0;
+    padding: 0;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+  }
+  h1 { font-size: 3.5em; font-weight: 700; }
+  h2 { font-size: 3em; font-weight: 400; margin-top: 0.2em; }
 }
 
-.banner-image-carousel {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; // Crucial for making images fill the carousel item space well.
-                     // Use 'contain' if you need to see the whole image without cropping,
-                     // but then ensure .carousel-item-content background is appropriate.
-  display: block;    // Removes extra space below inline images
-}
+// --- START: “SHOP NOW” 按钮样式与微调 ---
+.shop-now-button {
+  // 这是按钮与上方文字的间距
+  margin-top: 30px; 
+  
+  // 在这里微调按钮的左右位置
+  // 使用负值向左移动，正值向右移动
+  // margin-left: -15px; // 示例：向左移动15px
 
-.banner-loading,
-.banner-error,
-.banner-empty {
+  // 您也可以通过 margin-top 来微调上下位置
+  // margin-top: 40px; // 示例：向下移动
+
+  background-color: #000000;
+  color: #ffffff;
+  border-color: #000000;
+  border-radius: 50px;    // 圆角，使其成为椭圆形
+  padding: 25px 25px;      // 内边距，控制按钮大小
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 1px;    // 字符间距
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #333333;
+    border-color: #333333;
+    transform: scale(1.05);
+  }
+}
+// --- END: “SHOP NOW” 按钮样式与微调 ---
+
+
+.banner-placeholder {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 200px; // Give some space for these messages
-  padding: 20px;
-  text-align: center;
-  background-color: var(--el-fill-color-light);
-  border-radius: var(--el-border-radius-base);
-  color: var(--el-text-color-secondary);
-}
-
-.banner-error p {
-  color: var(--el-color-danger);
-}
-
-
-// Inside <style scoped lang="scss"> in Banner.vue
-
-.banner-carousel {
-  &.custom-indicator-placement {
-    position: relative;
-
-    :deep(.el-carousel__indicators--outside) {
-      position: absolute;
-      bottom: 15px;
-      right: 100px;  // CHANGED: Increased from 20px to 50px as an example
-      left: auto;
-      transform: none;
-      text-align: right;
-      margin: 0;
-      padding: 0;
-      z-index: 2;
-    }
-
-    // ... your existing styles for making indicators bolder ...
-    :deep(.el-carousel__indicator .el-carousel__button) {
-      height: 8px;
-      width: 60px;   // ADDED/MODIFIED: Set the desired width
-      background-color: rgba(255, 255, 255, 0.5);
-      opacity: 0.8;
-      border-radius: 2px;
-      transition: all 0.5s ease;
-    }
-
-    :deep(.el-carousel__indicator.is-active .el-carousel__button) {
-      height: 10px;
-      width: 80px;
-      background-color: #FFFFFF;
-      opacity: 1;
-    }
-
-    :deep(.el-carousel__indicator:not(.is-active):hover .el-carousel__button) {
-      background-color: rgba(255, 255, 255, 0.8);
-      opacity: 0.9;
-    }
-  }
+  width: 100%;
+  height: 100%;
+  color: #999;
 }
 </style>

@@ -1,80 +1,57 @@
-// // src/router/index.ts
-// import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-// import HomePage from '@/views/HomePage.vue';
-// import i18n from '../i18n'; // <--- 添加这行导入 (或者 import i18n from '@/i18n';)
-// import { useCartStore } from '@/store/modules/cart'; // 直接从 store 的位置导入
-
-// const routes: Array<RouteRecordRaw> = [
-//   {
-//     path: '/',
-//     name: 'Home',
-//     component: HomePage,
-//     meta: { titleKey: 'pageTitles.home' } // 示例：使用 i18n 的键作为标题
-//   },
-//   // 您可以在这里添加其他路由，例如搜索结果页
-//   // {
-//   //   path: '/search',
-//   //   name: 'Search',
-//   //   component: () => import('@/views/SearchResultsPage.vue'), // 路由懒加载示例
-//   //   meta: { titleKey: 'pageTitles.search' }
-//   // }
-// ];
-
-// const router = createRouter({
-//   history: createWebHistory(import.meta.env.BASE_URL), // 使用 HTML5 History 模式
-//   routes,
-//   scrollBehavior(to, from, savedPosition) {
-//     // 页面切换时滚动到顶部
-//     if (savedPosition) {
-//       return savedPosition;
-//     } else {
-//       return { top: 0 };
-//     }
-//   }
-// });
-
-// const cartStore = useCartStore();
-
-// // 全局前置守卫示例：更新页面标题
-// router.beforeEach((to, from, next) => {
-//   const titleKey = to.meta.titleKey as string;
-//   if (titleKey) {
-//     document.title = i18n.global.t(titleKey) as string;
-//   } else if (to.meta.title && typeof to.meta.title === 'string') {
-//     document.title = to.meta.title;
-//   } else {
-//     document.title = i18n.global.t('appName') as string; // 默认标题
-//   }
-//   next();
-// });
-
-// // Pinia 实例在 main.ts 中创建并 use()，此处仅用于导出模块 store
-// // 如果有 Pinia 插件等全局配置，可以放在这里
-// // export * from './modules/cart';
-// // export * from './modules/ui';
-// // export * from './modules/user';
-
-// export default router;
-
 // src/router/index.ts
+
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+// 导入您的 HomePage 组件，确保路径正确
 import HomePage from '@/views/HomePage.vue';
-import i18n from '../i18n'; // 确保这个路径指向您 src/i18n.ts 文件
+import i18n from '../i18n';
 
 const routes: Array<RouteRecordRaw> = [
+  // --- START: 这是必须被恢复的首页路由 ---
   {
     path: '/',
     name: 'Home',
-    component: HomePage,
-    meta: { titleKey: 'pageTitles.home' } // 假设您在 i18n 文件中有 pageTitles.home
+    component: HomePage, // 指向您的首页组件
+    meta: { titleKey: 'pageTitles.home' } // 使用您原有的 meta 信息
   },
-  // {
-  //   path: '/search-results', // 示例：搜索结果页
-  //   name: 'SearchResults',
-  //   component: () => import('@/views/SearchResultsPage.vue'), // 路由懒加载
-  //   meta: { titleKey: 'pageTitles.searchResults' }
-  // }
-  // 添加其他路由...
+  // --- END: 首页路由 ---
+
+  // --- START: 这是为商店相关页面新添加的路由 ---
+  {
+    // 对应“所有商品”链接
+    path: '/shop/all',
+    name: 'ShopAll',
+    // 使用路由懒加载，您需要创建 ShopAllPage.vue 文件
+    component: () => import('@/views/ShopAllPage.vue'), 
+    meta: { titleKey: 'pageTitles.shopAll' } // 假设您有这个i18n键
+  },
+  {
+    // 对应动态生成的分类链接，例如 /shop/category/4
+    path: '/shop/category/:categoryId', // :categoryId 是一个动态参数
+    name: 'ShopCategoryPage',
+    // 使用路由懒加载，您需要创建 CategoryPage.vue 文件
+    component: () => import('@/views/CategoryPage.vue'), 
+    props: true, // 允许将路由参数 (categoryId) 作为 prop 传递给页面组件
+    meta: { titleKey: 'pageTitles.categoryPage' } // 用于设置页面标题
+  },
+   // --- END: 商店相关路由 ---
+  
+  // --- 您可能有的其他路由，例如 About Us, App Download 等 ---
+  {
+    path: '/about',
+    name: 'AboutUs',
+    // 假设您的组件路径，如果文件不存在，您也需要创建它们
+    component: () => import('@/views/AboutPage.vue'), 
+  },
+  {
+    path: '/about/story',
+    name: 'OurStory',
+    component: () => import('@/views/OurStoryPage.vue'),
+  },
+  {
+    path: '/app-download',
+    name: 'AppDownload',
+    component: () => import('@/views/AppDownloadPage.vue'),
+  }
 ];
 
 const router = createRouter({
@@ -84,19 +61,20 @@ const router = createRouter({
     if (savedPosition) {
       return savedPosition;
     } else {
-      return { top: 0, behavior: 'smooth' }; // 添加平滑滚动效果
+      return { top: 0, behavior: 'smooth' };
     }
   }
 });
 
+// 您的 beforeEach 守卫保持不变
 router.beforeEach((to, from, next) => {
   const titleKey = to.meta.titleKey as string;
-  if (titleKey && i18n.global.te(titleKey)) { // te 方法检查 key 是否存在
+  if (titleKey && i18n.global.te(titleKey)) {
     document.title = i18n.global.t(titleKey);
   } else if (to.meta.title && typeof to.meta.title === 'string') {
     document.title = to.meta.title;
   } else {
-    document.title = i18n.global.te('appName') ? i18n.global.t('appName') : 'Pet Tech Store'; // 默认应用名称
+    document.title = i18n.global.te('appName') ? i18n.global.t('appName') : 'Pet Tech Store';
   }
   next();
 });
