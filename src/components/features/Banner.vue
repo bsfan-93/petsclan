@@ -149,9 +149,9 @@ onMounted(async () => {
   // 您也可以通过 margin-top 来微调上下位置
   // margin-top: 40px; // 示例：向下移动
 
-  background-color: #000000;
+  background-color: #757575;
   color: #ffffff;
-  border-color: #000000;
+  border-color: #757575;
   border-radius: 50px;    // 圆角，使其成为椭圆形
   padding: 25px 25px;      // 内边距，控制按钮大小
   font-weight: bold;

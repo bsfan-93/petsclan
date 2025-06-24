@@ -9,7 +9,8 @@
     "home": "首頁",
     "shop": "商城",
     "aboutUs": "關於我們",
-    "app": "App下載"
+    "app": "App下載",
+    "searchPlaceholder": "搜尋..."
   },
   "footer": {
     "company": {

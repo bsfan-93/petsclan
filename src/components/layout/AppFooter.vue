@@ -25,7 +25,6 @@
               <li><a href="#">{{ $t('footer.support.user_manual') }}</a></li>
               <li><a href="#">{{ $t('footer.support.shipping_policy') }}</a></li>
               <li><a href="#">{{ $t('footer.support.warranty_policy') }}</a></li>
-              <li><a href="#">{{ $t('footer.support.price_match_policy') }}</a></li>
               <li><a href="#">{{ $t('footer.support.return_refund_policy') }}</a></li>
             </ul>
           </div>

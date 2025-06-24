@@ -1,0 +1,42 @@
+{
+  "appName": "Pets Clan",
+  "topBar": {
+    "promo": {
+      "newUserDiscount20": "Diskaun 20% untuk Pengguna Baru semasa Pendaftaran!"
+    }
+  },
+  "nav": {
+    "home": "Laman Utama",
+    "shop": "Kedai",
+    "aboutUs": "Tentang Kami",
+    "app": "Aplikasi",
+    "searchPlaceholder": "Cari..."
+  },
+  "footer": {
+    "company": {
+      "title": "Syarikat",
+      "about_us": "Tentang Kami",
+      "blog": "Blog",
+      "privacy_policy": "Dasar Privasi",
+      "terms_of_service": "Syarat Perkhidmatan"
+    },
+    "support": {
+      "title": "Sokongan",
+      "faq": "Soalan Lazim",
+      "contact_us": "Hubungi kami",
+      "app_service": "Perkhidmatan Aplikasi",
+      "user_manual": "Manual Pengguna",
+      "shipping_policy": "Dasar Penghantaran",
+      "warranty_policy": "Polisi Waranti",
+      "return_refund_policy": "Polisi Pemulangan & Bayaran Balik"
+    },
+    "how_it_works": {
+      "title": "Bagaimana Ia Berfungsi",
+      "user_manual": "Manual Pengguna"
+    },
+    "signup": {
+      "title": "Daftar untuk diskaun 10% bagi pesanan pertama anda",
+      "email_placeholder": "E-mel"
+    }
+  }
+}

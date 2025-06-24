@@ -1,0 +1,42 @@
+{
+  "appName": "Pets Clan",
+  "topBar": {
+    "promo": {
+      "newUserDiscount20": "¡20% de descuento para nuevos usuarios al registrarse!"
+    }
+  },
+  "nav": {
+    "home": "Inicio",
+    "shop": "Tienda",
+    "aboutUs": "Sobre nosotros",
+    "app": "App",
+    "searchPlaceholder": "Buscar..."
+  },
+  "footer": {
+    "company": {
+      "title": "Compañía",
+      "about_us": "Sobre nosotros",
+      "blog": "Blog",
+      "privacy_policy": "Política de Privacidad",
+      "terms_of_service": "Términos de Servicio"
+    },
+    "support": {
+      "title": "Soporte",
+      "faq": "FAQ",
+      "contact_us": "Contáctanos",
+      "app_service": "Servicio de la App",
+      "user_manual": "Manual de Usuario",
+      "shipping_policy": "Política de Envío",
+      "warranty_policy": "Política de Garantía",
+      "return_refund_policy": "Política de Devoluciones y Reembolsos"
+    },
+    "how_it_works": {
+      "title": "Cómo funciona",
+      "user_manual": "Manual de Usuario"
+    },
+    "signup": {
+      "title": "Regístrate para obtener un 10% de descuento en tu primer pedido",
+      "email_placeholder": "Correo electrónico"
+    }
+  }
+}

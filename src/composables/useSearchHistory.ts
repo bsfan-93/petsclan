@@ -1,80 +1,61 @@
 // src/composables/useSearchHistory.ts
-import { ref, readonly, Ref, onMounted } from 'vue'; // Added onMounted for client-side check
+
+import { ref, readonly } from 'vue';
 
 const HISTORY_KEY = 'pet-tech-search-history';
+const MAX_LENGTH = 5; // 你可以把最大长度定义在这里
 
-// Define the structure for the return type of the composable
-interface UseSearchHistoryReturn {
-  searchHistory: Readonly<Ref<string[]>>; // It's an array of strings
-  addToHistory: (term: string) => void;
-  filterHistory: (query: string) => string[]; // Returns an array of strings
-  clearHistory: () => void;
-}
-
-export function useSearchHistory(maxLength: number = 5): UseSearchHistoryReturn {
-  // Initialize with an empty array, will be populated on client-side mount
+export function useSearchHistory(maxLength: number = MAX_LENGTH) {
   const historyState = ref<string[]>([]);
 
-  // Function to load history from localStorage (client-side only)
+  // 1. 从 localStorage 加载历史记录
   const loadHistory = () => {
-    if (typeof window !== 'undefined') {
-      try {
-        const storedHistory = localStorage.getItem(HISTORY_KEY);
-        historyState.value = storedHistory ? JSON.parse(storedHistory) : [];
-      } catch (e) {
-        console.error("Failed to parse search history from localStorage", e);
-        historyState.value = []; // Fallback to empty array on error
-      }
+    try {
+      const stored = localStorage.getItem(HISTORY_KEY);
+      // 修复了 bug: 确保解析的是一个有效的 JSON 数组字符串
+      historyState.value = stored ? JSON.parse(stored) : [];
+    } catch (e) {
+      console.error("Failed to load or parse search history:", e);
+      historyState.value = []; // 出错时重置为空数组
     }
   };
 
-  // Function to save history to localStorage (client-side only)
+  // 2. 保存历史记录到 localStorage
   const saveHistory = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(historyState.value));
-    }
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(historyState.value));
   };
 
-  // Load history when the composable is used on the client-side
-  // This is important if the composable is instantiated during SSR
-  if (typeof window !== 'undefined') {
-    loadHistory();
-  } else {
-    // For SSR, you might still want to call loadHistory in onMounted within the component
-    // or ensure this composable is only called client-side.
-    // For simplicity here, we assume client-side or onMounted call will handle it.
-  }
-
-
+  // 3. 添加新记录
   const addToHistory = (term: string) => {
     const lowerTerm = term.toLowerCase().trim();
     if (!lowerTerm) return;
 
-    // Remove existing entry to move it to the front
+    // 移除已存在的相同记录，确保新的排在最前面
     const newHistory = historyState.value.filter(t => t.toLowerCase() !== lowerTerm);
-    newHistory.unshift(lowerTerm); // Add to the beginning
+    newHistory.unshift(lowerTerm); // 添加到最前面
 
-    historyState.value = newHistory.slice(0, maxLength);
+    historyState.value = newHistory.slice(0, maxLength); // 裁剪到最大长度
     saveHistory();
   };
 
+  // 4. 过滤历史记录以供建议列表使用
   const filterHistory = (query: string): string[] => {
     const lowerQuery = query.toLowerCase().trim();
     if (!lowerQuery) {
-      return [...historyState.value]; // Return a copy of the full history
+      return [...historyState.value]; // 没有输入时返回全部历史
     }
     return historyState.value.filter(term => term.toLowerCase().includes(lowerQuery));
   };
 
+  // 5. 清空历史记录
   const clearHistory = () => {
     historyState.value = [];
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem(HISTORY_KEY);
-    }
+    localStorage.removeItem(HISTORY_KEY);
   };
 
   return {
     searchHistory: readonly(historyState),
+    loadHistory, // 暴露出 loadHistory 方法
     addToHistory,
     filterHistory,
     clearHistory,

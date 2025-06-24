@@ -31,15 +31,14 @@ onMounted(async () => {
   position: relative;
   width: 100%;
   
-  /* 移除 aspect-ratio */
+  /* Option 1: Use aspect-ratio (e.g., 16:9) */
+  aspect-ratio: 16 / 9;
   
-  /* 新增：直接设置一个您想要的高度 */
-  height: 1000px; /* 您可以把 500px 修改为任何您想要的像素值 */
+  /* Option 2: Use viewport height (e.g., 80% of the screen height) */
+  height: 95vh;
+
+  /* Set a max-height to prevent it from being too tall on large screens */
   
-  /* max-height 可以保留，也可以移除 */
-  // max-height: 600px; 
-  
-  /* ... 其他样式保持不变 ... */
   background-color: #f0f2f5;
   overflow: hidden;
 }

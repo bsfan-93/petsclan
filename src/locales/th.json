@@ -1,0 +1,42 @@
+{
+  "appName": "Pets Clan",
+  "topBar": {
+    "promo": {
+      "newUserDiscount20": "ส่วนลด 20% สำหรับผู้ใช้ใหม่เมื่อลงทะเบียน!"
+    }
+  },
+  "nav": {
+    "home": "หน้าหลัก",
+    "shop": "ร้านค้า",
+    "aboutUs": "เกี่ยวกับเรา",
+    "app": "แอป",
+    "searchPlaceholder": "ค้นหา..."
+  },
+  "footer": {
+    "company": {
+      "title": "บริษัท",
+      "about_us": "เกี่ยวกับเรา",
+      "blog": "บล็อก",
+      "privacy_policy": "นโยบายความเป็นส่วนตัว",
+      "terms_of_service": "ข้อกำหนดในการให้บริการ"
+    },
+    "support": {
+      "title": "สนับสนุน",
+      "faq": "คำถามที่พบบ่อย",
+      "contact_us": "ติดต่อเรา",
+      "app_service": "บริการแอป",
+      "user_manual": "คู่มือผู้ใช้",
+      "shipping_policy": "นโยบายการจัดส่ง",
+      "warranty_policy": "นโยบายการรับประกัน",
+      "return_refund_policy": "นโยบายการคืนสินค้าและการคืนเงิน"
+    },
+    "how_it_works": {
+      "title": "วิธีการทำงาน",
+      "user_manual": "คู่มือผู้ใช้"
+    },
+    "signup": {
+      "title": "สมัครเพื่อรับส่วนลด 10% สำหรับการสั่งซื้อครั้งแรกของคุณ",
+      "email_placeholder": "อีเมล"
+    }
+  }
+}

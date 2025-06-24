@@ -1,54 +1,67 @@
 // src/i18n.ts
+
 import { createI18n } from 'vue-i18n';
-import enMessages from './locales/en.json';
-import zhMessages from './locales/zh.json';
-import zhHantMessages from './locales/zh_Hant.json'; // 保持您原来的导入名称，或者改为 zhTwMessages 如果您喜欢
 
-// 定义支持的语言列表和其在 navigator.language 中的可能前缀
-const supportedLocales = [
-  { code: 'en', browserPrefixes: ['en'] },
-  { code: 'zh', browserPrefixes: ['zh-CN', 'zh-SG', 'zh'] }, // 简体中文，zh-CN 通常是简体
-  { code: 'zh-Hant', browserPrefixes: ['zh-TW', 'zh-HK', 'zh-MO', 'zh-Hant'] } // 繁体中文
-];
-const defaultLocale = 'en';
+// 导入所有语言文件
+import en from './locales/en.json';
+import zh from './locales/zh.json';
+import zh_Hant from './locales/zh_Hant.json';
+import it from './locales/it.json';
+import pt from './locales/pt.json';
+import th from './locales/th.json';
+import es from './locales/es.json';
+import ms from './locales/ms.json';
+import de from './locales/de.json';
+import fr from './locales/fr.json';
+import ko from './locales/ko.json';
+import ja from './locales/ja.json';
 
+// 定义支持的语言列表
+const supportedLocales = ['en', 'zh', 'zh-TW', 'zh-HK', 'it', 'pt', 'th', 'es', 'ms', 'de', 'fr', 'ko', 'ja'];
+
+// 自动检测浏览器语言或从本地存储中获取
 const getInitialLocale = (): string => {
-  const persistedLocale = localStorage.getItem('user-locale');
-  if (persistedLocale && supportedLocales.some(l => l.code === persistedLocale)) {
-    return persistedLocale;
+  const savedLocale = localStorage.getItem('user-locale');
+  if (savedLocale && supportedLocales.includes(savedLocale)) {
+    return savedLocale;
   }
 
-  const browserLanguage = navigator.language; // 例如 'en-US', 'zh-CN', 'zh-TW'
-  for (const supported of supportedLocales) {
-    if (supported.browserPrefixes.some(prefix => browserLanguage.startsWith(prefix))) {
-      return supported.code;
+  const browserLanguage = navigator.language;
+  if (browserLanguage.startsWith('zh')) {
+    if (browserLanguage === 'zh-TW' || browserLanguage === 'zh-HK') {
+      return 'zh_Hant';
     }
+    return 'zh';
   }
   
-  // 如果浏览器主语言（例如 'zh' 来自 'zh-TW'）也想匹配
-  const primaryBrowserLanguage = browserLanguage.split('-')[0];
-  for (const supported of supportedLocales) {
-      // 特殊处理 'zh' 可能同时代表简体或作为繁体的父级
-      if (supported.code === primaryBrowserLanguage && supported.code !== 'zh-Hant') { // 避免 'zh' 错误匹配到 'zh-Hant'
-          return supported.code;
-      }
+  const baseLanguage = browserLanguage.split('-')[0];
+  if (supportedLocales.includes(baseLanguage)) {
+    return baseLanguage;
   }
-
-  return defaultLocale;
+  
+  return 'en'; // 默认语言
 };
 
+
 const i18n = createI18n({
-  legacy: false, 
-  locale: getInitialLocale(), 
-  fallbackLocale: defaultLocale, // 回退语言
+  legacy: false, // 使用 Composition API
+  locale: getInitialLocale(), // 设置初始语言
+  fallbackLocale: 'en', // 设置回退语言
   messages: {
-    'en': enMessages,
-    'zh': zhMessages,
-    'zh-Hant': zhHantMessages // 👈 **添加繁体中文消息**
-                           // 使用 'zh-Hant' 作为键名，与您的文件名和导入对应
-                           // 并确保您的 LanguageSwitcher 组件切换到此 locale 时也使用 'zh-Hant'
+    // 注册所有语言
+    en,
+    zh,
+    zh_Hant,
+    it,
+    pt,
+    th,
+    es,
+    ms,
+    de,
+    fr,
+    ko,
+    ja,
   },
-  globalInjection: true,
 });
 
 export default i18n;

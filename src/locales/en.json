@@ -9,7 +9,9 @@
     "home": "Home",
     "shop": "Shop",
     "aboutUs": "About Us",
-    "app": "App"
+    "app": "App",
+    "shop_all": "Shop All" ,
+    "searchPlaceholder": "Search..."
   },
   "footer": {
     "company": {
@@ -25,7 +27,9 @@
       "contact_us": "Contact us",
       "app_service": "App Service",
       "user_manual": "User Manual",
-      "shipping_policy": "Shipping Policy"
+      "shipping_policy": "Shipping Policy",
+      "warranty_policy": "Warranty Policy",
+      "return_refund_policy": "Return & Refund Policy"
     },
     "how_it_works": {
       "title": "How It Works",

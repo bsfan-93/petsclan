@@ -1,0 +1,42 @@
+{
+  "appName": "Pets Clan",
+  "topBar": {
+    "promo": {
+      "newUserDiscount20": "신규 사용자 등록 시 20% 할인!"
+    }
+  },
+  "nav": {
+    "home": "홈",
+    "shop": "상점",
+    "aboutUs": "우리에 대해",
+    "app": "앱",
+    "searchPlaceholder": "검색..."
+  },
+  "footer": {
+    "company": {
+      "title": "회사",
+      "about_us": "우리에 대해",
+      "blog": "블로그",
+      "privacy_policy": "개인정보 처리방침",
+      "terms_of_service": "서비스 이용 약관"
+    },
+    "support": {
+      "title": "지원",
+      "faq": "자주 묻는 질문",
+      "contact_us": "문의하기",
+      "app_service": "앱 서비스",
+      "user_manual": "사용자 매뉴얼",
+      "shipping_policy": "배송 정책",
+      "warranty_policy": "보증 정책",
+      "return_refund_policy": "반품 및 환불 정책"
+    },
+    "how_it_works": {
+      "title": "작동 방식",
+      "user_manual": "사용자 매뉴얼"
+    },
+    "signup": {
+      "title": "첫 주문 10% 할인을 위해 가입하세요",
+      "email_placeholder": "이메일"
+    }
+  }
+}

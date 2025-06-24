@@ -9,7 +9,8 @@
     "home": "首页",
     "shop": "商城",
     "aboutUs": "关于我们",
-    "app": "App下载"
+    "app": "App下载",
+    "searchPlaceholder": "搜索..."
   },
   "footer": {
     "company": {
@@ -30,7 +31,7 @@
       "price_match_policy": "价格匹配政策",
       "return_refund_policy": "退换货政策"
     },
-    
+
     "how_it_works": {
       "title": "工作原理",
       "user_manual": "用户手册"

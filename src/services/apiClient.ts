@@ -15,7 +15,7 @@ export interface ProductCardData {
   link?: string;
 }
 
-const API_BASE_URL = "http://192.168.2.9:9999";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://192.168.2.9:9999"; 
 
 const BANNER_API_ENDPOINT = "/standalones/photo/details?type=1";
 // --- START: 使用您提供的正确API端点 ---
@@ -198,5 +198,36 @@ export async function fetchHealthSectionData(): Promise<HealthSectionData | null
   } catch (error: any) {
     console.error('Error in fetchHealthSectionData service:', error);
     throw error;
+  }
+}
+
+/**
+ * 提交订阅邮件地址
+ * @param email - 用户输入的邮件地址
+ */
+export async function subscribeEmail(email: string): Promise<boolean> {
+  // 注意：这里的 API 地址是我根据你之前的输入补充的
+  const API_URL = "http://192.168.2.9:9999/standalones/mail/subscribe";
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email: email }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Subscription failed');
+    }
+
+    const result = await response.json();
+    console.log('Subscription successful:', result);
+    return true;
+
+  } catch (error) {
+    console.error('Error in subscribeEmail service:', error);
+    return false;
   }
 }

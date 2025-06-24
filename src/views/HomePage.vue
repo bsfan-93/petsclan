@@ -27,7 +27,7 @@
     </div>
 
     <div class="follow-section">
-      <h2 class="follow-title">{{ $t('home.follow.title') }}</h2>
+      <h2 class="follow-title">{{ $t('Follow along for more') }}</h2>
       <Carousel v-bind="carouselSettings" class="follow-carousel">
         <Slide v-for="image in followImages" :key="image.id">
           <div class="carousel__item">
@@ -46,7 +46,6 @@
 </template>
 
 <script setup lang="ts">
-// 脚本部分保持您现有的设置
 import { ref, onMounted } from 'vue';
 import Banner from '@/components/features/Banner.vue';
 import ProductCard from '@/components/features/ProductCard.vue';
@@ -54,28 +53,45 @@ import { fetchProductCards, type ProductCardData, fetchFollowImages, type Follow
 import { Carousel, Navigation, Slide } from 'vue3-carousel';
 import 'vue3-carousel/dist/carousel.css';
 import HealthSection from '@/components/features/HealthSection.vue';
+import SubscriptionSection from '@/components/features/SubscriptionSection.vue';
+// ✨ 导入 ui store
+import { useUiStore } from '@/store/modules/ui';
 
 const products = ref<ProductCardData[]>([]);
 const followImages = ref<FollowImageData[]>([]);
+// ✨ 获取 ui store 实例
+const uiStore = useUiStore();
 
 const carouselSettings = {
   itemsToShow: 2.5,
   snapAlign: 'center',
   wrapAround: true,
-  // ↓↓↓ 在这里修改数值来调整轮播时间 ↓↓↓
   autoplay: 5000,
   transition: 500,
 };
 
 onMounted(async () => {
+  // --- 你已有的加载产品数据的代码 ---
   try {
     const [productData, followImageData] = await Promise.all([
       fetchProductCards(),
       fetchFollowImages()
     ]);
-    products.value = productData.slice(0, 3);
-    followImages.value = followImageData;
-  } catch (error) { console.error(error); }
+    if (productData) { products.value = productData.slice(0, 3); }
+    if (followImageData) { followImages.value = followImageData; }
+  } catch (error) { 
+    console.error("Failed to load home page data:", error);
+    products.value = [];
+    followImages.value = [];
+  }
+  
+  // ✨ 新增：在组件挂载后，延迟 3 秒尝试弹出订阅窗口
+  const hasSeenModal = sessionStorage.getItem('subscriptionModalClosed');
+  if (!hasSeenModal) {
+    setTimeout(() => {
+      uiStore.setSubscriptionModalVisible(true);
+    }, 3000); // 延迟 3000 毫秒 = 3 秒
+  }
 });
 </script>
 

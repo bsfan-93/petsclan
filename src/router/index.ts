@@ -4,6 +4,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 // 导入您的 HomePage 组件，确保路径正确
 import HomePage from '@/views/HomePage.vue';
 import i18n from '../i18n';
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 
 const routes: Array<RouteRecordRaw> = [
   // --- START: 这是必须被恢复的首页路由 ---
@@ -34,7 +35,22 @@ const routes: Array<RouteRecordRaw> = [
     meta: { titleKey: 'pageTitles.categoryPage' } // 用于设置页面标题
   },
    // --- END: 商店相关路由 ---
+   
+  {
+    path: '/',
+    name: 'Home',
+    component: () => import('@/views/HomePage.vue'),
+    meta: { title: 'page_titles.home' }
+  },
   
+  // 在这里添加新的搜索路由
+  {
+    path: '/search',
+    name: 'Search', // 这里的 name 必须是 'Search'
+    component: () => import('@/views/SearchPage.vue'),
+    meta: { title: 'page_titles.search' }
+  },
+
   // --- 您可能有的其他路由，例如 About Us, App Download 等 ---
   {
     path: '/about',
