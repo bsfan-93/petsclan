@@ -5,22 +5,33 @@
     </div>
     <el-scrollbar max-height="300px" v-if="cartStore.items.length > 0">
       <ul class="cart-item-list">
-        <li v-for="item in cartStore.items" :key="item.id" class="cart-item">
-          <el-image :src="item.imageUrl" fit="cover" class="item-image" />
-          <div class="item-details">
-            <p class="item-name">{{ item.name }}</p>
-            <p class="item-price-quantity">{{ item.quantity }} x ¥{{ item.price.toFixed(2) }}</p>
-          </div>
-          <el-button
-            type="danger"
-            :icon="Delete"
-            circle
-            plain
-            size="small"
-            @click="cartStore.removeFromCart(item.id)"
-            class="remove-item-btn"
-          />
-        </li>
+        <el-image :src="item.imageUrl" fit="cover" class="item-image" />
+
+<div class="item-details">
+  <p class="item-name">{{ item.name }}</p>
+  <div class="item-meta">
+    <span class="item-price">¥{{ item.price.toFixed(2) }}</span>
+    <el-input-number
+      v-model="item.quantity"
+      :min="1"
+      :max="99"
+      size="small"
+      controls-position="right"
+      @change="(quantity) => cartStore.updateItemQuantity(item.id, quantity)"
+      class="item-quantity-input"
+    />
+  </div>
+</div>
+
+<el-button
+  type="danger"
+  :icon="Delete"
+  circle
+  text
+  size="small"
+  @click="cartStore.removeFromCart(item.id)"
+  class="remove-item-btn"
+/>
       </ul>
     </el-scrollbar>
     <div v-else class="empty-cart-message">
@@ -89,42 +100,59 @@ font-weight: 600;
 list-style: none;
 padding: 0;
 margin: 0;
+
 .cart-item {
-display: flex;
-align-items: center;
-padding: 12px 16px;
-&:not(:last-child) {
-border-bottom: 1px solid var(--el-border-color-lighter);
-}
-.item-image {
-width: 50px;
-height: 50px;
-margin-right: 12px;
-border-radius: var(--el-border-radius-small);
-flex-shrink: 0;
-}
-.item-details {
-flex-grow: 1;
-.item-name {
-font-size: var(--el-font-size-base);
-color: var(--el-text-color-primary);
-margin: 0 0 4px 0;
-// 省略号处理
-white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
-max-width: 150px; // 根据宽度调整
-}
-.item-price-quantity {
-font-size: var(--el-font-size-small);
-color: var(--el-text-color-secondary);
-margin: 0;
-}
-}
-.remove-item-btn {
-margin-left: auto;
-flex-shrink: 0;
-}
+  display: flex;
+  align-items: flex-start; /* 顶部对齐 */
+  padding: 16px;
+  gap: 12px; /* 设置图片、详情、按钮之间的间距 */
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--el-border-color-lighter);
+  }
+
+  .item-image {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--el-border-radius-small);
+    flex-shrink: 0;
+  }
+
+  .item-details {
+    flex-grow: 1; /* 让详情部分占据剩余空间 */
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* 标题和价格/数量之间的间距 */
+
+    .item-name {
+      font-size: var(--el-font-size-base);
+      color: var(--el-text-color-primary);
+      margin: 0;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    .item-meta {
+      display: flex;
+      justify-content: space-between; /* 让价格和数量调整器两端对齐 */
+      align-items: center;
+    }
+
+    .item-price {
+      font-size: var(--el-font-size-base);
+      color: var(--el-text-color-primary);
+      font-weight: bold;
+    }
+
+    .item-quantity-input {
+      width: 90px;
+    }
+  }
+
+  .remove-item-btn {
+    flex-shrink: 0;
+    margin-left: 8px;
+  }
 }
 }
 .empty-cart-message {

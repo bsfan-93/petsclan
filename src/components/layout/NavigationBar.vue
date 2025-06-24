@@ -15,30 +15,31 @@
     >
       <el-menu-item index="/">{{ $t('nav.home') }}</el-menu-item>
       
-      <el-sub-menu index="/shop" key="shop-main-submenu" popper-class="shop-mega-menu">
-        <template #title>{{ $t('nav.shop') }}</template>
+      <el-sub-menu index="/shop" key="shop-main-submenu" popper-class="shop-mega-menu" :teleported="false">
+        <template #title>Shop</template>
         <div class="mega-menu-content">
           <div class="mega-menu-nav">
-            <h3 class="mega-menu-title">Collection</h3>
-            <div v-if="isLoadingShopCategories">加载中...</div>
-            <ul v-else>
+            <h3 class="mega-menu-title">Categories</h3>
+            <ul>
               <li v-for="category in shopCategories" :key="category.id">
-                <router-link :to="category.path" class="mega-menu-link">{{ category.name }}</router-link>
-              </li>
-              <li>
-                <router-link to="/shop/all" class="mega-menu-link all-items-link">{{ t('nav.shop_all') }}</router-link>
+                <router-link :to="`/category/${category.id}`" class="mega-menu-link">
+                  {{ category.name }}
+                </router-link>
               </li>
             </ul>
+            <router-link to="/shop/all" class="mega-menu-link all-items-link">
+              Shop All Items
+            </router-link>
           </div>
           <div class="mega-menu-previews">
-            <router-link 
-              v-for="item in featuredCategories" 
-              :key="item.id" 
-              :to="item.path" 
+            <router-link
+              v-for="item in featuredCategories"
+              :key="item.id"
+              :to="`/product/${item.id}`"
               class="mega-menu-preview-card"
             >
               <img :src="item.imageUrl" :alt="item.name" class="preview-image" />
-              <!-- <span class="preview-name">{{ item.name }}</span> -->
+              <span class="preview-name">{{ item.name }}</span>
             </router-link>
           </div>
         </div>
@@ -381,6 +382,95 @@ const featuredCategories = computed(() => {
       transform: translateY(-5px);           /* 图片向上移动，产生上浮效果 */
       box-shadow: 0 8px 16px rgba(0,0,0,0.1); /* 同时增加阴影 */
     }
+  }
+}
+
+:deep(.el-menu--popup.shop-mega-menu) {
+  /* 重置 Element Plus 的默认样式 */
+  padding: 0;
+  border-radius: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+  background-color: #ffffff;
+}
+
+.mega-menu-content {
+  display: flex; /* 使用 Flex 布局实现多列效果 */
+  padding: 30px 40px;
+  gap: 50px; /* 设置列之间的间距 */
+}
+
+.mega-menu-nav {
+  flex-shrink: 0; /* 防止这一列被压缩 */
+
+  .mega-menu-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    margin: 0 0 20px 0;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      margin-bottom: 15px;
+    }
+  }
+
+  .mega-menu-link {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--el-color-primary);
+    }
+
+    &.all-items-link {
+      color: var(--el-color-primary);
+      margin-top: 20px;
+      display: inline-block;
+    }
+  }
+}
+
+.mega-menu-previews {
+  display: flex;
+  gap: 20px; /* 设置预览卡片之间的间距 */
+}
+
+.mega-menu-preview-card {
+  display: block;
+  text-decoration: none;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .preview-image {
+    width: 200px; /* 固定图片宽度 */
+    height: 150px; /* 固定图片高度 */
+    object-fit: cover;
+    display: block;
+  }
+
+  .preview-name {
+    display: block;
+    padding: 10px;
+    background-color: #f5f7fa;
+    color: #333;
+    font-weight: 500;
+    text-align: center;
   }
 }
 </style>

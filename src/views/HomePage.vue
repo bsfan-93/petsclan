@@ -53,7 +53,7 @@ import { fetchProductCards, type ProductCardData, fetchFollowImages, type Follow
 import { Carousel, Navigation, Slide } from 'vue3-carousel';
 import 'vue3-carousel/dist/carousel.css';
 import HealthSection from '@/components/features/HealthSection.vue';
-import SubscriptionSection from '@/components/features/SubscriptionSection.vue';
+import SubscriptionPopup from '@/components/features/SubscriptionModal.vue';
 // ✨ 导入 ui store
 import { useUiStore } from '@/store/modules/ui';
 
@@ -61,6 +61,7 @@ const products = ref<ProductCardData[]>([]);
 const followImages = ref<FollowImageData[]>([]);
 // ✨ 获取 ui store 实例
 const uiStore = useUiStore();
+const showPopup = ref(false);
 
 const carouselSettings = {
   itemsToShow: 2.5,
