@@ -1,33 +1,36 @@
 <template>
   <el-dialog
-    v-model="isDialogVisible" :show-close="false"
-    width="700px"
+    v-model="isModalVisible"
+    :title="t('subscriptionModal.title')"
+    width="clamp(300px, 80vw, 850px)"
     custom-class="subscription-dialog"
-    @closed="handleClose" >
-    <div class="popup-container">
+    :show-close="true"
+    center
+    align-center
+  >
+    <div class="modal-content-wrapper">
       <div class="image-section">
-        <img src="@/assets/images/popover.png" alt="Dog" class="popup-image" />
-        <div class="image-overlay-text">
-          Pets Clan
-        </div>
+        <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?q=80&w=1962&auto=format&fit=crop" alt="Happy Dog" class="modal-image">
       </div>
       <div class="form-section">
-        <el-button @click="closeDialog" class="close-button" :icon="Close" circle text></el-button>
-        <h2>Unlock <span class="highlight">20% OFF</span></h2>
-        <p class="subtitle">Your order Today</p>
-        <p class="description">Make it more convenient for pets</p>
-
-        <el-form class="subscribe-form" @submit.prevent="subscribe">
-          <el-form-item>
-            <label for="email-input">Email</label>
-            <el-input id="email-input" placeholder="Email" v-model="email" size="large"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="subscribe" class="subscribe-button" size="large">Subscribe For</el-button>
-          </el-form-item>
+        <div class="form-header">
+          <h2>{{ t('subscriptionModal.headline') }}</h2>
+          <p>{{ t('subscriptionModal.subheadline') }}</p>
+        </div>
+        <el-form @submit.prevent="handleSubscription" class="subscription-form">
+          <el-input
+            v-model="email"
+            :placeholder="t('subscriptionModal.emailPlaceholder')"
+            type="email"
+            size="large"
+            required
+          >
+            <template #append>
+              <el-button type="primary" native-type="submit" class="subscribe-button">{{ t('subscriptionModal.subscribeButton') }}</el-button>
+            </template>
+          </el-input>
         </el-form>
-
-        <button @click="closeDialog" class="no-thanks-button">No, Thanks</button>
+        <button @click="handleClose" class="no-thanks-button">{{ t('subscriptionModal.noThanks') }}</button>
       </div>
     </div>
   </el-dialog>
@@ -35,154 +38,136 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { ElDialog, ElButton, ElInput, ElForm, ElFormItem } from 'element-plus';
-import { Close } from '@element-plus/icons-vue';
-import { useUiStore } from '@/store/modules/ui'; // ✨ 1. Import the UI store
-import { subscribeEmail } from '@/services/apiClient'; // Import the API function
+import { useI18n } from 'vue-i18n';
+import { useUiStore } from '@/store/modules/ui';
+import { ElMessage } from 'element-plus';
 
-const uiStore = useUiStore(); // ✨ 2. Get an instance of the store
+const { t } = useI18n();
+const uiStore = useUiStore();
 const email = ref('');
 
-// ✨ 3. Create a computed property that reads from and writes to the store
-const isDialogVisible = computed({
+// 使用 computed 属性与 Pinia store 进行双向绑定
+const isModalVisible = computed({
   get: () => uiStore.isSubscriptionModalVisible,
-  set: (value) => uiStore.setSubscriptionModalVisible(value),
+  set: (value) => {
+    if (!value) {
+      uiStore.hideSubscriptionModal();
+    }
+  }
 });
 
-// Closes the dialog by updating the store
-const closeDialog = () => {
-  isDialogVisible.value = false;
-};
-
-// When the dialog is fully closed, mark it as "seen" in sessionStorage
-const handleClose = () => {
-  sessionStorage.setItem('subscriptionModalClosed', 'true');
-};
-
-// Handle the subscription logic
-const subscribe = async () => {
-  if (email.value) {
-    console.log(`Subscribing with email: ${email.value}`);
-    const success = await subscribeEmail(email.value);
-    if (success) {
-      // Optionally show a success message to the user
-      console.log("Subscription successful!");
-    } else {
-      // Optionally show an error message
-      console.error("Subscription failed.");
-    }
-    closeDialog();
+const handleSubscription = () => {
+  if (email.value && /\S+@\S+\.\S+/.test(email.value)) {
+    console.log('Subscribed with email:', email.value);
+    ElMessage.success(t('subscriptionModal.subscribeSuccess'));
+    uiStore.hideSubscriptionModal();
+  } else {
+    ElMessage.error(t('subscriptionModal.invalidEmail'));
   }
+};
+
+const handleClose = () => {
+  uiStore.hideSubscriptionModal();
 };
 </script>
 
 <style lang="scss">
-/* 我们在这里使用全局 style 标签 (没有 scoped), 
-  因为 Element Plus 的 el-dialog 组件会被渲染到 body 的直属子节点,
-  需要全局样式才能覆盖它。
-*/
 .subscription-dialog {
-  padding: 0 !important;
   border-radius: 20px !important;
   overflow: hidden;
 
   .el-dialog__header {
-    display: none;
+    display: none; // We hide the default title bar
   }
 
   .el-dialog__body {
     padding: 0 !important;
   }
 }
-</style>
 
-<style scoped lang="scss">
-.popup-container {
+.modal-content-wrapper {
   display: flex;
+  flex-wrap: wrap; // Allow wrapping on small screens
 }
 
 .image-section {
-  width: 45%;
-  position: relative;
+  flex: 1;
+  min-width: 300px;
+  background-color: #333;
 
-  .popup-image {
+  .modal-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
   }
-
-  .image-overlay-text {
-    position: absolute;
-    bottom: 30px;
-    left: 30px;
-    font-size: 48px;
-    font-weight: bold;
-    color: white;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
-  }
 }
 
 .form-section {
-  width: 55%;
-  padding: 30px 40px;
-  background-color: #fff;
+  flex: 1;
+  min-width: 300px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  position: relative;
+}
 
-  .close-button {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-  }
-
+.form-header {
+  margin-bottom: 24px;
   h2 {
-    font-size: 32px;
-    font-weight: 700;
-    margin: 20px 0 0 0;
-
-    .highlight {
-      color: #e57373; /* 您可以换成自己品牌的主题色 */
-    }
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0 0 8px 0;
+    color: #1a1a1a;
   }
-
-  .subtitle {
-    font-size: 24px;
-    margin: 0 0 20px 0;
-    font-weight: 500;
-  }
-
-  .description {
+  p {
+    font-size: 1rem;
     color: #666;
-    font-size: 16px;
-    margin-bottom: 25px;
+    margin: 0;
   }
+}
 
-  .subscribe-form {
-    text-align: left;
+.subscription-form {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 16px;
+}
 
-    label {
-      font-weight: 600;
-      margin-bottom: 5px;
-      display: block;
-    }
-
-    .subscribe-button {
-      width: 100%;
-      background-color: #f0c14b; /* 根据您的设计图示例颜色 */
-      border-color: #f0c14b;
-      color: #111;
-      font-weight: bold;
-    }
+.subscribe-button {
+  background-color: #E6A23C !important;
+  border-color: #E6A23C !important;
+  color: #fff;
+  &:hover {
+    background-color: #d8932c !important;
+    border-color: #d8932c !important;
   }
+}
 
-  .no-thanks-button {
-    background: none;
-    border: none;
-    color: #888;
-    cursor: pointer;
+.no-thanks-button {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 8px;
+  &:hover {
+    color: #333;
     text-decoration: underline;
-    margin-top: 15px;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .image-section {
+    height: 250px; // Fixed height for the image on mobile
+  }
+  .form-section {
+    padding: 24px;
+  }
+  .form-header h2 {
+    font-size: 1.5rem;
   }
 }
 </style>

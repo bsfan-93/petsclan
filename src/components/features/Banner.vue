@@ -36,22 +36,31 @@
 </template>
 
 <script setup lang="ts">
-// Script 部分无需改动
 import { ref, onMounted } from 'vue';
+// ✨ 修正：使用了正确的函数名 fetchBannerDetails
 import { fetchBannerDetails, type ApiBannerData } from '@/services/apiClient';
 
 const bannerListItems = ref<ApiBannerData[]>([]);
 
+// onMounted 钩子确保 API 请求只在组件首次加载时执行一次
 onMounted(async () => {
-  const data = await fetchBannerDetails();
-  let dataArray: ApiBannerData[] = [];
-  if (Array.isArray(data)) { dataArray = data; }
-  else if (data) { dataArray = [data]; }
-  bannerListItems.value = dataArray;
+  try {
+    // ✨ 修正：调用了正确的 API 函数
+    const data = await fetchBannerDetails();
+    let dataArray: ApiBannerData[] = [];
+    if (Array.isArray(data)) {
+      dataArray = data;
+    } else if (data) {
+      dataArray = [data];
+    }
+    bannerListItems.value = dataArray;
+  } catch (error) {
+    console.error("Failed to load banner details:", error);
+    bannerListItems.value = []; // 出错时设置为空数组，防止页面崩溃
+  }
 });
 </script>
 
-<!-- banner图尺寸调整 -->
 <style scoped lang="scss">
 .banner-wrapper {
   height: 83vh;
@@ -61,57 +70,46 @@ onMounted(async () => {
   background-color: #f0f2f5;
 }
 
-// 轮播项的容器，作为定位的基准
 .carousel-item-container {
   width: 100%;
   height: 100%;
-  position: relative; // 关键：为绝对定位的子元素提供锚点
+  position: relative;
   overflow: hidden;
 }
 
 .banner-image {
   width: 100%;
   height: 100%;
-  object-fit: cover; // 确保图片铺满背景
+  object-fit: cover;
 }
 
-// 轮播图组件的整体样式
 .banner-carousel {
   height: 100%;
-
   :deep(.el-carousel__container) {
     height: 100% !important;
   }
-
-  // --- START: 指示器样式 (您期望的长条形、右下角样式) ---
   :deep(.el-carousel__indicators) {
     position: absolute;
-    bottom: 70px; // 指示器组距离底部的距离
-    right: 100px;  // 指示器组距离右侧的距离
-    left: auto;     // 重置 left 属性
-    transform: none;  // 重置 transform 属性
-    flex-direction: row;   // 如果指示器默认是垂直排列的，确保它们水平排列
+    bottom: 70px;
+    right: 100px;
+    left: auto;
+    transform: none;
+    flex-direction: row;
   }
-
-   // 目标：每个指示器的按钮部分 (li > div)
   :deep(.el-carousel__indicator .el-carousel__button) {
-    width: 60px;    // 未激活状态下的宽度
-    height: 10px;   // 高度
-    border-radius: 12px;    // 轻微的圆角
-    background-color: #ffffff;    // 设置未激活状态下的背景色和透明度
-    opacity: 0.4;   // 半透明效果
+    width: 60px;
+    height: 10px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    opacity: 0.4;
     transition: all 0.3s ease-in-out;  
   }
-  // 目标：当前激活的那个指示器
   :deep(.el-carousel__indicator.is-active .el-carousel__button) {
-    width: 60px;    // 激活时变得更长，并且完全不透明
+    width: 60px;
     opacity: 1;
   }
-  
 }
 
-
-// --- START: 内容覆盖层样式 (控制文字和按钮的整体位置) ---
 .banner-content-overlay {
   position: absolute;
   z-index: 10;
@@ -119,12 +117,9 @@ onMounted(async () => {
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  
-  // 在这里调整文字和按钮这个“整体”的位置
-  bottom: 12%; // 距离底部的距离
-  left: 10%;   // 距离左侧的距离
+  bottom: 12%;
+  left: 10%;
 }
-// --- END: 内容覆盖层样式 ---
 
 .banner-text-content {
   color: #ffffff;
@@ -137,36 +132,23 @@ onMounted(async () => {
   h2 { font-size: 3em; font-weight: 400; margin-top: 0.2em; }
 }
 
-// --- START: “SHOP NOW” 按钮样式与微调 ---
 .shop-now-button {
-  // 这是按钮与上方文字的间距
-  margin-top: 30px; 
-  
-  // 在这里微调按钮的左右位置
-  // 使用负值向左移动，正值向右移动
-  // margin-left: -15px; // 示例：向左移动15px
-
-  // 您也可以通过 margin-top 来微调上下位置
-  // margin-top: 40px; // 示例：向下移动
-
+  margin-top: 30px;
   background-color: #757575;
   color: #ffffff;
   border-color: #757575;
-  border-radius: 50px;    // 圆角，使其成为椭圆形
-  padding: 25px 25px;      // 内边距，控制按钮大小
+  border-radius: 50px;
+  padding: 25px 25px;
   font-weight: bold;
   font-size: 14px;
-  letter-spacing: 1px;    // 字符间距
+  letter-spacing: 1px;
   transition: all 0.3s ease;
-
   &:hover {
     background-color: #333333;
     border-color: #333333;
     transform: scale(1.05);
   }
 }
-// --- END: “SHOP NOW” 按钮样式与微调 ---
-
 
 .banner-placeholder {
   display: flex;

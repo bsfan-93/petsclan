@@ -58,10 +58,10 @@ const { t } = useI18n();
 const router = useRouter();
 const cartStore = useCartStore();
 
-const goToCartPage = () => {
-  // router.push({ name: 'Cart' }); // TODO: Add a cart page route
-  console.log('Navigate to cart page or checkout');
-};
+// const goToCartPage = () => {
+//   // router.push({ name: 'Cart' }); // TODO: Add a cart page route
+//   console.log('Navigate to cart page or checkout');
+// };
 </script>
 
 <style scoped lang="scss">

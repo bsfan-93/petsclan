@@ -47,6 +47,24 @@ const routes: Array<RouteRecordRaw> = [
     path: '/app-download',
     name: 'AppDownload',
     component: () => import('@/views/AppDownloadPage.vue'),
+  },
+  {
+    path: '/app-download',
+    name: 'AppDownload',
+    component: () => import('@/views/AppDownloadPage.vue'),
+  },
+  // --- ADD THIS NEW ROUTE ---
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: () => import('@/views/ProfilePage.vue'),
+    meta: { titleKey: 'pageTitles.profile' } // Optional: for document title
+  },
+  {
+    path: '/cart',
+    name: 'Cart',
+    component: () => import('@/views/CartPage.vue'),
+    meta: { titleKey: 'pageTitles.cart' }
   }
 ];
 
