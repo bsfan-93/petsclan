@@ -77,6 +77,7 @@ import LanguageSwitcher from '@/components/features/LanguageSwitcher.vue';
 import CustomSearchBar from '@/components/features/CustomSearchBar.vue';
 // 导入 API 请求函数和数据类型定义
 import { fetchShopCategories, type ShopCategory } from '@/services/apiClient';
+import ExpandingSearchBar from '@/components/features/ExpandingSearchBar.vue';
 
 // 获取 t 函数，用于在脚本中进行翻译
 const { t } = useI18n();
@@ -253,201 +254,96 @@ const featuredCategories = computed(() => {
 </style>
 
 <style lang="scss">
-/*
- * ===================================================================
- * 大型菜单 (Mega Menu) 样式
- * ===================================================================
-*/
-
-/* ✨ 修正点：将所有下拉菜单的样式都放在这个不带 scoped 的块里 */
-
-/* 重置 Element Plus 下拉菜单的内层样式，让它变透明 */
-.el-popper.shop-mega-menu .el-dropdown-menu {
-  padding: 0 !important;              /* 内边距设为0 */
-  border: none !important;                 /* 去掉边框 */
-  background: transparent !important;      /* 背景设为透明 */
-  box-shadow: none !important;             /* 去掉阴影 */
-}
-
-/* 设置菜单面板本身的大小和外观 */
 .el-popper.is-light.shop-mega-menu {
-  /* --- 关键布局修正 --- */
-  top: 171px !important;                   /* 定位：从导航栏下方（110px）开始 */
-  z-index: 1000 !important;                   /* 层级：确保在导航栏下方（导航栏为1000）*/
-  left: 50% !important;                    /* 定位：水平居中第一步 */
-  transform: translateX(-50%) !important;    /* 定位：水平居中第二步 */
-
-  /* --- 以下为你设定的参数，我进行了整理和修正 --- */
-  width: 2116px;                             /* 宽度：保留你设定的值 */
-  max-width: 100vw;                           /* 最大宽度：修正为一个合理的值，防止超出屏幕 */
-  height: auto;                              /* 高度：由内容自动撑开，比固定的 50vh 更灵活 */
+  /* Positioning */
+  top: 110px !important; /* Position right below the navbar */
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 999 !important; /* Ensure it's below the navbar (z-index: 1000) */
   
-  /* 其他美化样式 */
-  border-radius: 0 !important;               /* 边框圆角：按你的设定去掉 */
-  border: none !important;            /* 边框：移除所有边框*/
-  border-bottom: 1px solid #e4e7ed !important; /* 只加上底部的边框作为分割线 */
-  border-top: none !important;               /* 顶部无边框，与导航栏无缝衔接 */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* 阴影：保留你设定的值 */
-  padding: 0 !important;                     /* 面板自身无内边距 */
-  background-color: #fff;                    /* 面板背景色 */
-}
-
-/* 我们自己的内容容器的布局 */
-.shop-mega-menu .mega-menu-content {
-  display: flex;                             /* flex 布局 */
-  flex-direction: row;                       /* 水平排列，形成左右两列 */
-  padding: 130px 130px;                      /* 内边距：保留你设定的值 */
-  gap: 1000px;                                /* ✨ 修正：原 1300px 值过大，会导致布局破坏，已调整为更能体现你意图的 120px */
-  align-items: stretch;                   /* 让左右两列顶部对齐 */
-}
-
-/* 左列：文字链接列表的样式 */
-.shop-mega-menu .mega-menu-nav {
-  flex-basis: 220px;                         /* 基础宽度：保留你设定的值 */
-  flex-shrink: 0;                            /* 防止被压缩 */
-  border-right: 1px solid #f0f0f0;           /* 右侧分割线 */
-  padding-right: 50px;                       /* 右内边距 */
+  /* Sizing & Appearance */
+  width: 90vw;
+  max-width: 1200px; /* Set a max-width for very large screens */
+  height: auto;
+  padding: 0 !important;
   
-  /* 左列标题 "Collection" 的样式 */
-  .mega-menu-title {
-    font-size: 30px;                         /* 字体大小：保留你设定的值 */
-    font-weight: 900;                        /* 字体粗细：保留你设定的值 */
-    color: #909399;                          /* 字体颜色：保留你设定的值 */
-    margin-top: 0;                           /* 顶部外边距 */
-    margin-bottom: 50px;                     /* 底部外边距：保留你设定的值 */
-    text-transform: uppercase;               /* 文本大写 */
-  }
-  
-  /* 链接列表 <ul> 标签的样式 */
-  ul {
-    list-style: none;                        /* 去掉列表默认的点 */
-    padding: 0;                              /* ✨ 修正：原 110 没有单位，修正为 0 */
-    margin: 0;                               /* 去掉外边距 */
-  }
-
-  /* 列表项 <li> 标签的样式 */
-  li {
-    margin-bottom: 50px;                     /* 列表项间距：保留你设定的值 */
-  }
-
-  /* 链接 <a> 标签的样式 */
-  .mega-menu-link {
-    text-decoration: none;                   /* 去掉下划线 */
-    font-size: 50px;                         /* 字体大小：保留你设定的值 */
-    font-weight: 700;                        /* 字体粗细：保留你设定的值 */
-    color: #303133;                          /* 字体颜色：保留你设定的值 */
-    
-    /* 鼠标悬浮在链接上时的样式 */
-    &:hover {
-      color: #409eff;                        /* 悬浮颜色：保留你设定的值 */
-    }
-  }
-}
-
-/* 右列：图片预览列表的样式 */
-.shop-mega-menu .mega-menu-previews {
-  display: flex;                             /* flex 布局 */
-  flex-grow: 1;                              /* 占据所有剩余空间 */
-  justify-content: space-between;            /* 项目之间均匀分布 */
-  gap: 10px;                                 /* 项目之间的间距 */
-  justify-content: space-around;             /* 让三张图片在拉长后的空间里均匀分布 */
-  /* 图片预览卡片的样式 */
-  .mega-menu-preview-card {
-    display: block;                          /* 显示为块级元素 */
-    text-decoration: none;                   /* 去掉链接下划线 */
-    width: 200px; /* <-- 添加这一行，并设置你想要的任意宽度 */
-    // flex: 1;                                 /* 每个卡片等分空间 */
-
-    /* 卡片中图片的样式 */
-    .preview-image {
-      width: 100%;                           /* 图片宽度占满卡片 */
-      aspect-ratio: 1;                       /* 宽高比 1:1 (正方形) */
-      object-fit: cover;                     /* 图片裁剪以填满容器 */
-      border-radius: 0px;                    /* 图片圆角 */
-      // margin-bottom: 12px;                   /* 图片与下方文字的间距 */
-      transition: all 0.3s ease;             /* 平滑过渡效果 */
-      background-color: #f5f7fa;             /* 图片加载前的占位背景色 */
-    }
-
-    /* 卡片中文字的样式 */
-    .preview-name {
-      font-size: 15px;                       /* 字体大小 */
-      font-weight: 500;                      /* 字体粗细 */
-      text-align: center;                    /* 文字居中 */
-      color: #303133;                        /* 字体颜色 */
-    }
-
-    /* 鼠标悬浮在整个卡片上时的效果 */
-    &:hover .preview-image {
-      transform: translateY(-5px);           /* 图片向上移动，产生上浮效果 */
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1); /* 同时增加阴影 */
-    }
-  }
-}
-
-:deep(.el-menu--popup.shop-mega-menu) {
-  /* 重置 Element Plus 的默认样式 */
-  padding: 0;
-  border-radius: 20px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  /* Borders & Shadows */
+  border-radius: 0 0 20px 20px !important; /* Rounded corners only on the bottom */
   border: 1px solid #e0e0e0;
+  border-top: none !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
   background-color: #ffffff;
 }
 
-.mega-menu-content {
-  display: flex; /* 使用 Flex 布局实现多列效果 */
-  padding: 30px 40px;
-  gap: 50px; /* 设置列之间的间距 */
+/* This targets the inner wrapper that Element Plus creates, removing default padding */
+.el-popper.shop-mega-menu .el-menu--popup {
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
-.mega-menu-nav {
-  flex-shrink: 0; /* 防止这一列被压缩 */
+.shop-mega-menu .mega-menu-content {
+  display: flex;
+  padding: 40px 50px;
+  gap: 60px;
+}
+
+/* Left Column: Navigation Links */
+.shop-mega-menu .mega-menu-nav {
+  flex-shrink: 0;
+  border-right: 1px solid #f0f0f0;
+  padding-right: 50px;
 
   .mega-menu-title {
     font-size: 16px;
     font-weight: 600;
-    color: #888;
+    color: #909399;
+    margin: 0 0 25px 0;
     text-transform: uppercase;
-    margin: 0 0 20px 0;
   }
-
+  
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
-
     li {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
     }
   }
 
   .mega-menu-link {
-    font-size: 20px;
-    font-weight: bold;
-    color: #333;
+    font-size: 22px;
+    font-weight: 700;
+    color: #303133;
     text-decoration: none;
     transition: color 0.2s;
-
+    
     &:hover {
       color: var(--el-color-primary);
     }
 
     &.all-items-link {
-      color: var(--el-color-primary);
-      margin-top: 20px;
+      margin-top: 25px;
       display: inline-block;
+      font-size: 18px;
+      color: var(--el-color-primary);
     }
   }
 }
 
-.mega-menu-previews {
+/* Right Column: Product Previews */
+.shop-mega-menu .mega-menu-previews {
   display: flex;
-  gap: 20px; /* 设置预览卡片之间的间距 */
+  flex-grow: 1;
+  gap: 25px;
+  justify-content: flex-start;
 }
 
 .mega-menu-preview-card {
   display: block;
   text-decoration: none;
+  width: 220px;
   border-radius: 15px;
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -458,16 +354,17 @@ const featuredCategories = computed(() => {
   }
 
   .preview-image {
-    width: 200px; /* 固定图片宽度 */
-    height: 150px; /* 固定图片高度 */
+    width: 100%;
+    height: 180px;
     object-fit: cover;
     display: block;
+    background-color: #f5f7fa;
   }
 
   .preview-name {
     display: block;
-    padding: 10px;
-    background-color: #f5f7fa;
+    padding: 12px;
+    background-color: #f8f9fa;
     color: #333;
     font-weight: 500;
     text-align: center;

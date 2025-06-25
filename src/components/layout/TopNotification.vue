@@ -1,4 +1,3 @@
-优惠栏
 <template>
   <div class="top-notification-bar" ref="topBarRef" role="region" aria-label="Site-wide notification">
     <p>{{ $t('topBar.promo.newUserDiscount20') }}</p> 

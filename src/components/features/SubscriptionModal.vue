@@ -1,11 +1,9 @@
 <template>
   <el-dialog
-    v-model="isDialogVisible"
-    :show-close="false"
+    v-model="isDialogVisible" :show-close="false"
     width="700px"
     custom-class="subscription-dialog"
-    @closed="$emit('closed')"
-  >
+    @closed="handleClose" >
     <div class="popup-container">
       <div class="image-section">
         <img src="@/assets/images/popover.png" alt="Dog" class="popup-image" />
@@ -19,7 +17,7 @@
         <p class="subtitle">Your order Today</p>
         <p class="description">Make it more convenient for pets</p>
 
-        <el-form class="subscribe-form">
+        <el-form class="subscribe-form" @submit.prevent="subscribe">
           <el-form-item>
             <label for="email-input">Email</label>
             <el-input id="email-input" placeholder="Email" v-model="email" size="large"></el-input>
@@ -36,31 +34,43 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, computed } from 'vue';
 import { ElDialog, ElButton, ElInput, ElForm, ElFormItem } from 'element-plus';
 import { Close } from '@element-plus/icons-vue';
+import { useUiStore } from '@/store/modules/ui'; // ✨ 1. Import the UI store
+import { subscribeEmail } from '@/services/apiClient'; // Import the API function
 
-const props = defineProps<{
-  visible: boolean
-}>();
-
-const emit = defineEmits(['closed']);
-
-const isDialogVisible = ref(props.visible);
+const uiStore = useUiStore(); // ✨ 2. Get an instance of the store
 const email = ref('');
 
-watch(() => props.visible, (newVal) => {
-  isDialogVisible.value = newVal;
+// ✨ 3. Create a computed property that reads from and writes to the store
+const isDialogVisible = computed({
+  get: () => uiStore.isSubscriptionModalVisible,
+  set: (value) => uiStore.setSubscriptionModalVisible(value),
 });
 
+// Closes the dialog by updating the store
 const closeDialog = () => {
   isDialogVisible.value = false;
 };
 
-const subscribe = () => {
+// When the dialog is fully closed, mark it as "seen" in sessionStorage
+const handleClose = () => {
+  sessionStorage.setItem('subscriptionModalClosed', 'true');
+};
+
+// Handle the subscription logic
+const subscribe = async () => {
   if (email.value) {
     console.log(`Subscribing with email: ${email.value}`);
-    // 在这里可以添加您真实的订阅逻辑
+    const success = await subscribeEmail(email.value);
+    if (success) {
+      // Optionally show a success message to the user
+      console.log("Subscription successful!");
+    } else {
+      // Optionally show an error message
+      console.error("Subscription failed.");
+    }
     closeDialog();
   }
 };

@@ -1,7 +1,7 @@
 <template>
   <el-config-provider :locale="currentElementPlusLocale">
     <div id="app-container">
-      <SubscriptionModal /> <TopNotification />
+      <TopNotification />
       <NavigationBar />
       <main class="app-main-content">
         <router-view v-slot="{ Component }">

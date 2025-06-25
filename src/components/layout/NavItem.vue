@@ -1,4 +1,3 @@
-dao'hang'zi'xiang
 <template>
   <el-sub-menu v-if="item.children && item.children.length > 0" :index="item.path || `sub-${item.id}`">
     <template #title><span>{{ t(item.name) }}</span></template>

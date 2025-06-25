@@ -1,49 +1,49 @@
 <template>
   <div class="cart-popover-content">
     <div class="popover-header">
-      <h4>{{ $t('cart.title') }}</h4>
+      <h4>{{ $t('cart.title') || 'Shopping Cart' }}</h4>
     </div>
     <el-scrollbar max-height="300px" v-if="cartStore.items.length > 0">
       <ul class="cart-item-list">
-        <el-image :src="item.imageUrl" fit="cover" class="item-image" />
-
-<div class="item-details">
-  <p class="item-name">{{ item.name }}</p>
-  <div class="item-meta">
-    <span class="item-price">¥{{ item.price.toFixed(2) }}</span>
-    <el-input-number
-      v-model="item.quantity"
-      :min="1"
-      :max="99"
-      size="small"
-      controls-position="right"
-      @change="(quantity) => cartStore.updateItemQuantity(item.id, quantity)"
-      class="item-quantity-input"
-    />
-  </div>
-</div>
-
-<el-button
-  type="danger"
-  :icon="Delete"
-  circle
-  text
-  size="small"
-  @click="cartStore.removeFromCart(item.id)"
-  class="remove-item-btn"
-/>
+        <li v-for="item in cartStore.items" :key="item.id" class="cart-item">
+          <el-image :src="item.imageUrl" fit="cover" class="item-image" />
+          <div class="item-details">
+            <p class="item-name">{{ item.name }}</p>
+            <div class="item-meta">
+              <span class="item-price">¥{{ item.price.toFixed(2) }}</span>
+              <el-input-number
+                v-model="item.quantity"
+                :min="1"
+                :max="99"
+                size="small"
+                controls-position="right"
+                @change="(quantity) => cartStore.updateItemQuantity(item.id, quantity)"
+                class="item-quantity-input"
+              />
+            </div>
+          </div>
+          <el-button
+            type="danger"
+            :icon="Delete"
+            circle
+            text
+            size="small"
+            @click="cartStore.removeFromCart(item.id)"
+            class="remove-item-btn"
+          />
+        </li>
       </ul>
     </el-scrollbar>
     <div v-else class="empty-cart-message">
       <el-icon :size="40"><ShoppingCartFull /></el-icon>
-      <p>{{ $t('cart.empty') }}</p>
+      <p>{{ $t('cart.empty') || 'Your cart is empty' }}</p>
     </div>
     <div class="popover-footer" v-if="cartStore.items.length > 0">
       <div class="total-section">
-        <span>{{ $t('cart.total') }}:</span>
+        <span>{{ $t('cart.total') || 'Total' }}:</span>
         <span class="total-price">¥{{ cartStore.totalAmount.toFixed(2) }}</span>
       </div>
-      <el-button type="primary" @click="goToCartPage" class="view-cart-btn">{{ $t('cart.checkout') }}</el-button>
+      <el-button type="primary" @click="goToCartPage" class="view-cart-btn">{{ $t('cart.checkout') || 'Checkout' }}</el-button>
     </div>
   </div>
 </template>
@@ -59,132 +59,107 @@ const router = useRouter();
 const cartStore = useCartStore();
 
 const goToCartPage = () => {
-  // router.push({ name: 'Cart' }); // 假设有购物车页面路由
+  // router.push({ name: 'Cart' }); // TODO: Add a cart page route
   console.log('Navigate to cart page or checkout');
 };
-
-// Pinia store (cart.ts) 示例:
-// import { defineStore } from 'pinia';
-// interface CartItem { id: string; name: string; price: number; quantity: number; imageUrl: string; }
-// export const useCartStore = defineStore('cart', {
-//   state: () => ({
-//     items: as CartItem,
-//   }),
-//   getters: {
-//     itemCount: (state) => state.items.reduce((sum, item) => sum + item.quantity, 0),
-//     totalAmount: (state) => state.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
-//   },
-//   actions: {
-//     addToCart(product: Omit<CartItem, 'quantity'>) { /*... */ },
-//     removeFromCart(productId: string) { this.items = this.items.filter(item => item.id!== productId); },
-//     updateQuantity(productId: string, quantity: number) { /*... */ },
-//   },
-// });
 </script>
 
 <style scoped lang="scss">
+/* Styles are correct, no changes needed here */
 .cart-popover-content {
-display: flex;
-flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 .popover-header {
-padding: 12px 16px;
-border-bottom: 1px solid var(--el-border-color-lighter);
-h4 {
-margin: 0;
-font-size: var(--el-font-size-medium);
-font-weight: 600;
-}
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+  h4 {
+    margin: 0;
+    font-size: var(--el-font-size-medium);
+    font-weight: 600;
+  }
 }
 .cart-item-list {
-list-style: none;
-padding: 0;
-margin: 0;
-
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 .cart-item {
   display: flex;
-  align-items: flex-start; /* 顶部对齐 */
+  align-items: flex-start;
   padding: 16px;
-  gap: 12px; /* 设置图片、详情、按钮之间的间距 */
+  gap: 12px;
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--el-border-color-lighter);
   }
-
-  .item-image {
-    width: 60px;
-    height: 60px;
-    border-radius: var(--el-border-radius-small);
-    flex-shrink: 0;
-  }
-
-  .item-details {
-    flex-grow: 1; /* 让详情部分占据剩余空间 */
-    display: flex;
-    flex-direction: column;
-    gap: 8px; /* 标题和价格/数量之间的间距 */
-
-    .item-name {
-      font-size: var(--el-font-size-base);
-      color: var(--el-text-color-primary);
-      margin: 0;
-      font-weight: 500;
-      line-height: 1.3;
-    }
-
-    .item-meta {
-      display: flex;
-      justify-content: space-between; /* 让价格和数量调整器两端对齐 */
-      align-items: center;
-    }
-
-    .item-price {
-      font-size: var(--el-font-size-base);
-      color: var(--el-text-color-primary);
-      font-weight: bold;
-    }
-
-    .item-quantity-input {
-      width: 90px;
-    }
-  }
-
-  .remove-item-btn {
-    flex-shrink: 0;
-    margin-left: 8px;
-  }
 }
+.item-image {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--el-border-radius-small);
+  flex-shrink: 0;
+}
+.item-details {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.item-name {
+  font-size: var(--el-font-size-base);
+  color: var(--el-text-color-primary);
+  margin: 0;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.item-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.item-price {
+  font-size: var(--el-font-size-base);
+  color: var(--el-text-color-primary);
+  font-weight: bold;
+}
+.item-quantity-input {
+  width: 90px;
+}
+.remove-item-btn {
+  flex-shrink: 0;
+  margin-left: 8px;
 }
 .empty-cart-message {
-padding: 30px 16px;
-text-align: center;
-color: var(--el-text-color-secondary);
-.el-icon {
-color: var(--el-text-color-placeholder);
-margin-bottom: 10px;
-}
-p {
-margin: 0;
-font-size: var(--el-font-size-base);
-}
+  padding: 30px 16px;
+  text-align: center;
+  color: var(--el-text-color-secondary);
+  .el-icon {
+    color: var(--el-text-color-placeholder);
+    margin-bottom: 10px;
+  }
+  p {
+    margin: 0;
+    font-size: var(--el-font-size-base);
+  }
 }
 .popover-footer {
-padding: 12px 16px;
-border-top: 1px solid var(--el-border-color-lighter);
-.total-section {
-display: flex;
-justify-content: space-between;
-align-items: center;
-margin-bottom: 12px;
-font-size: var(--el-font-size-base);
-.total-price {
-font-weight: bold;
-font-size: var(--el-font-size-medium);
-color: var(--el-color-primary);
+  padding: 12px 16px;
+  border-top: 1px solid var(--el-border-color-lighter);
 }
+.total-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: var(--el-font-size-base);
+}
+.total-price {
+  font-weight: bold;
+  font-size: var(--el-font-size-medium);
+  color: var(--el-color-primary);
 }
 .view-cart-btn {
-width: 100%;
-}
+  width: 100%;
 }
 </style>
