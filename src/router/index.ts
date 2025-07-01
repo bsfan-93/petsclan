@@ -49,12 +49,6 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/AppDownloadPage.vue'),
   },
   {
-    path: '/app-download',
-    name: 'AppDownload',
-    component: () => import('@/views/AppDownloadPage.vue'),
-  },
-  // --- ADD THIS NEW ROUTE ---
-  {
     path: '/profile',
     name: 'Profile',
     component: () => import('@/views/ProfilePage.vue'),

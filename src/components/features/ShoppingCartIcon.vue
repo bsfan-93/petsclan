@@ -8,6 +8,7 @@
       popper-class="cart-popover"
       :hide-after="100"
       :show-after="200"
+      :offset="0"
     >
       <template #reference>
         <el-badge :value="cartStore.itemCount" class="cart-badge" :hidden="cartStore.itemCount === 0" :max="99">
@@ -31,23 +32,38 @@ const cartStore = useCartStore();
 
 <style scoped lang="scss">
 .shopping-cart-icon-wrapper {
-display: flex;
-align-items: center;
-height: 100%; // 确保在导航栏中垂直居中
-padding: 0 10px; // 给予一些点击空间
-cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 10px;
+  cursor: pointer;
 
- .cart-icon {
-    color: var(--el-text-color-regular); // 或导航栏文字颜色
+  .cart-icon {
+    color: var(--el-text-color-regular);
     &:hover {
       color: var(--el-color-primary);
     }
   }
-  
-  // 调整徽标位置
+
   :deep(.el-badge__content.is-fixed) {
     top: 8px;
-    right: 18px; 
+    right: 18px;
   }
+}
+</style>
+
+<style lang="scss">
+/*
+  这个不带 scoped 的 style 块里的样式是全局性的，
+  可以修改由 Element Plus 渲染到 body 下的弹窗面板。
+*/
+.el-popover.el-popper.cart-popover {
+  /* 强制将由JS计算的顶部外边距设为0，解决间距问题 */
+  margin-top: 0px !important;
+
+  /* 在这里统一设置其他样式，确保生效 */
+  border-radius: 12px !important;
+  border: 1px solid #E4E7ED !important;
+  box-shadow: var(--el-box-shadow-light) !important;
 }
 </style>

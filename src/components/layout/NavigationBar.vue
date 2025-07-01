@@ -15,8 +15,8 @@
     >
       <el-menu-item index="/">{{ $t('nav.home') }}</el-menu-item>
       
-      <el-sub-menu index="/shop" key="shop-main-submenu" popper-class="shop-mega-menu" :teleported="false">
-        <template #title>Shop</template>
+      <el-sub-menu index="/shop" key="shop-main-submenu" popper-class="shop-mega-menu" >
+        <template #title>{{ $t('nav.shop') }}</template>
         <div class="mega-menu-content">
           <div class="mega-menu-nav">
             <h3 class="mega-menu-title">Categories</h3>
@@ -28,7 +28,6 @@
               </li>
             </ul>
             <router-link to="/shop/all" class="mega-menu-link all-items-link">
-              Shop All Items
             </router-link>
           </div>
           <div class="mega-menu-previews">
@@ -39,7 +38,6 @@
               class="mega-menu-preview-card"
             >
               <img :src="item.imageUrl" :alt="item.name" class="preview-image" />
-              <span class="preview-name">{{ item.name }}</span>
             </router-link>
           </div>
         </div>
@@ -54,7 +52,7 @@
     </el-menu>
 
     <div class="right-menu-items"> 
-      <CustomSearchBar />
+      <ExpandingSearchBar />
       <el-icon class="menu-action-icon user-icon" @click="goToProfile"><User /></el-icon> 
       <ShoppingCartIcon />
       <LanguageSwitcher />
@@ -63,97 +61,81 @@
 </template>
 
 <script setup lang="ts">
-// 从 'vue' 导入核心功能：ref 用于创建响应式变量，computed 用于创建计算属性，onMounted 是生命周期钩子
+// 9. 从 'vue' 导入核心功能
 import { ref, computed, onMounted } from 'vue';
-// 从 Element Plus 图标库导入图标组件
+// 10. 从 Element Plus 图标库导入图标组件
 import { User } from '@element-plus/icons-vue';
-// 从 vue-router 导入路由功能
+// 11. 从 vue-router 导入路由功能
 import { useRoute, useRouter } from 'vue-router';
-// 从 vue-i18n 导入国际化功能
+// 12. 从 vue-i18n 导入国际化功能
 import { useI18n } from 'vue-i18n';
-// 导入我们自己封装的组件
+// 13. 导入我们自己封装的组件
 import ShoppingCartIcon from '@/components/features/ShoppingCartIcon.vue';
 import LanguageSwitcher from '@/components/features/LanguageSwitcher.vue';
-import CustomSearchBar from '@/components/features/CustomSearchBar.vue';
-// 导入 API 请求函数和数据类型定义
-import { fetchShopCategories, type ShopCategory } from '@/services/apiClient';
 import ExpandingSearchBar from '@/components/features/ExpandingSearchBar.vue';
+// 14. 导入 API 请求函数和数据类型定义
+import { fetchShopCategories, type ShopCategory } from '@/services/apiClient';
 
-// 获取 t 函数，用于在脚本中进行翻译
+// 15. 获取 t 函数，用于国际化翻译
 const { t } = useI18n();
-// 获取当前路由信息，比如路径、参数等
+// 16. 获取当前路由信息
 const route = useRoute();
-// 获取路由实例，用于页面跳转
+// 17. 获取路由实例，用于页面跳转
 const router = useRouter();
 
-// 创建一个计算属性，它会动态地获取当前页面的路径，用于高亮对应的菜单项
+// 18. 创建计算属性，用于高亮当前激活的菜单项
 const activeMenuIndex = computed(() => route.path);
-// 创建响应式变量，用于存储从 API 获取的商店分类列表
+// 19. 创建响应式变量，用于存储商店分类列表
 const shopCategories = ref<ShopCategory[]>([]);
-// 创建响应式变量，用于控制是否显示“加载中”的状态
+// 20. 创建响应式变量，用于控制加载状态
 const isLoadingShopCategories = ref(false);
 
-// onMounted 是一个生命周期钩子，它会在组件被挂载到页面上之后执行一次
+// 21. onMounted 生命周期钩子，在组件挂载后执行一次
 onMounted(async () => {
-  // 开始请求前，显示加载状态
   isLoadingShopCategories.value = true;
   try {
-    // 调用 API 函数，并等待它返回结果
     shopCategories.value = await fetchShopCategories();
   } catch (e) {
-    // 如果请求过程中出现错误，在控制台打印错误信息
     console.error("Failed to fetch shop categories:", e);
   } finally { 
-    // 不论成功或失败，最后都隐藏加载状态
     isLoadingShopCategories.value = false;
   }
 });
 
-// 定义一个跳转到个人资料页的函数
+// 22. 定义跳转到个人资料页的函数
 const goToProfile = () => router.push('/profile');
 
-// 创建一个计算属性，用于生成右侧的特色分类预览数据
+// 23. 创建计算属性，用于生成右侧的特色分类预览数据
 const featuredCategories = computed(() => {
-  // 从环境变量中获取 API 的基础 URL
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  // 如果没有在 .env 文件中定义，打印错误并返回空数组
-  if (!API_BASE_URL) {
-    console.error("VITE_API_BASE_URL is not defined in your .env file!");
-    return [];
-  }
-  
-  // 从获取到的所有分类中，截取前3个
-  return shopCategories.value.slice(0, 3).map(category => {
-    // 对这3个分类进行处理，为每个分类添加一个完整的 imageUrl 属性
-    return {
-      ...category, // 复制 category 的所有原有属性 (id, name, path 等)
-      imageUrl: `${API_BASE_URL}/standalones/photo/details?type=0&id=${category.id}` // 拼接出完整的图片 URL
-    };
-  });
+  // 我们不再需要在这里拼接URL，因为apiClient已经处理好了
+  // 直接从 shopCategories 中截取前3个即可
+  // 注意：我们假设 fetchShopCategories 返回的数据已经包含了 imageUrl
+  return shopCategories.value.slice(0, 3);
 });
+
 </script>
 
 <style scoped lang="scss">
-// 导航栏最外层容器的样式
+/* 25. 导航栏最外层容器的样式 */
 .navigation-bar-container {
-  position: relative; // 设为相对定位，作为内部绝对定位元素的父容器
-  height: 110px; // 固定高度
-  background-color: #ffffff; // 背景色
-  border-bottom: 1px solid #e0e0e0; // 底部边框
-  width: 100%; // 宽度占满
+  position: relative;
+  height: 114px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  width: 100%;
   box-sizing: border-box;
-  position: sticky; // 粘性定位，实现吸顶效果
-  top: 0; // 滚动到顶部时固定
-  z-index: 1000; // 确保在页面其他内容之上
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-// Logo 容器的样式
+/* 26. Logo 容器的样式 */
 .logo-container {
-  position: absolute; // 绝对定位，脱离文档流
-  left: 100px; // 距离左侧 100px
-  top: 50%; // 先向下移动父容器高度的50%
-  transform: translateY(-50%); // 再向上移动自身高度的50%，实现完美的垂直居中
-  z-index: 2; // 层级更高，确保在菜单项之上
+  position: absolute;
+  left: 100px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
   
   .logo-image {
     height: 118px;
@@ -161,29 +143,29 @@ const featuredCategories = computed(() => {
   }
 }
 
-// 右侧图标容器的样式
+/* 27. 右侧图标容器的样式 */
 .right-menu-items {
-  position: absolute; // 绝对定位
-  right: 100px; // 距离右侧 100px
+  position: absolute;
+  right: 100px;
   top: 50%;
-  transform: translateY(-50%); // 垂直居中
+  transform: translateY(-50%);
   z-index: 2;
-  display: flex; // 使用 flex 布局让内部图标水平排列
-  align-items: center; // 垂直居中对齐
-  gap: 12px; // 图标之间的间距
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-// 中间主导航菜单的样式
+/* 28. 中间主导航菜单的样式 */
 .main-navigation-menu {
-  position: absolute; // 绝对定位
-  left: 50%; // 先向右移动父容器宽度的50%
+  position: absolute;
+  left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%); // 再向左、向上移动自身宽高的一半，实现完美的水平垂直居中
+  transform: translate(-50%, -50%);
   height: 100%;
-  border-bottom: none !important; // 覆盖 Element Plus 的默认下边框
-  background-color: transparent; // 背景透明
+  border-bottom: none !important;
+  background-color: transparent;
 
-  // :deep() 是一个深度选择器，可以穿透到子组件内部，修改其样式
+  /* 29. 修改子组件 el-menu-item 和 el-sub-menu__title 的样式 */
   :deep(.el-menu-item),
   :deep(.el-sub-menu__title) {
     height: 100% !important;
@@ -192,33 +174,33 @@ const featuredCategories = computed(() => {
     padding: 0 35px !important;
     font-size: 26px;
     font-weight: 700;
-    color: #000000 !important; // 文字颜色
-    // 鼠标悬浮时的样式
+    color: #000000 !important;
     &:hover {
-      color: var(--el-color-primary) !important; // 文字变为主题色
+      color: var(--el-color-primary) !important;
     }
   }
 
-  // 子菜单的下拉箭头图标样式
+  /* 30. 子菜单的下拉箭头图标样式 */
   :deep(.el-sub-menu__title .el-sub-menu__icon-arrow) {
     margin-left: 8px !important;
     vertical-align: middle;
     position: static !important;
   }
 
-  // 菜单项被激活（选中）时的样式
+  /* 31. 菜单项被激活（选中）时的样式 */
   .el-menu-item.is-active,
   :deep(.el-sub-menu.is-active .el-sub-menu__title) {
-    color: #000000 !important; // 保持黑色
+    color: #000000 !important;
+    border-bottom: none !important;
   }
 }
 
-// 右侧普通图标的通用样式
+/* 32. 右侧普通图标的通用样式 */
 .menu-action-icon {
   font-size: 25px;
   color: #000000;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -228,14 +210,13 @@ const featuredCategories = computed(() => {
   }
 }
 
-// 针对购物车图标的特殊微调
+/* 33. 针对购物车图标的特殊微调 */
 :deep(.shopping-cart-icon-wrapper) {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   margin-left: -10px;
   margin-right: -5px;
 
-  // 购物车徽章样式
   .el-badge.cart-badge {
     display: flex !important;
     align-items: center !important;
@@ -244,62 +225,70 @@ const featuredCategories = computed(() => {
     height: 100%;
     padding: 0 !important;
   }
-  // 购物车图标本身的样式
+  
   i.el-icon.cart-icon {
-    color: #000000 !important;
+    color: #000000;
     font-size: 25px !important;
     line-height: 1;
+    transition: color 0.2s ease;
+  }
+
+  &:hover {
+    i.el-icon.cart-icon {
+      color: var(--el-color-primary);
+    }
   }
 }
 </style>
 
 <style lang="scss">
+/* 34. 针对我们自定义的 shop-mega-menu 类进行样式设置 */
 .el-popper.is-light.shop-mega-menu {
-  /* Positioning */
-  top: 110px !important; /* Position right below the navbar */
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  z-index: 999 !important; /* Ensure it's below the navbar (z-index: 1000) */
+  top: 176px !important;
+
+  /* --- 以下是主要修改点 --- */
+  left: 1px !important; /* 1. 将左侧定位点设为 100px，与您的Logo对齐 */
+  transform: translateX(0) !important; /* 2. 移除居中的横向位移 */
+
+  /* 宽度可以保持不变，或者设置为您想要的固定宽度 */
+  width: 2000px; /* 您可以设置为一个固定的宽度，例如1200px */
+  max-width: 2000px; /* 同时设置一个最大宽度，防止在小屏幕上超出 */
   
-  /* Sizing & Appearance */
-  width: 90vw;
-  max-width: 1200px; /* Set a max-width for very large screens */
-  height: auto;
-  padding: 0 !important;
-  
-  /* Borders & Shadows */
-  border-radius: 0 0 20px 20px !important; /* Rounded corners only on the bottom */
-  border: 1px solid #e0e0e0;
-  border-top: none !important;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
-  background-color: #ffffff;
+  /* 外观：只保留必要的样式 */
+  border-radius: 0 0 20px 20px !important;
+  background-color: transparent; /* 背景透明 */
+  border: none;                  /* 移除边框 */
+  box-shadow: none;              /* 移除阴影 */
+
+  // border: 2px solid red !important; /* 添加一个2像素的红色实线边框用于调试 */
 }
 
-/* This targets the inner wrapper that Element Plus creates, removing default padding */
+/* 35. 移除内部 el-menu 的默认样式，让我们的内容来填充 */
 .el-popper.shop-mega-menu .el-menu--popup {
   padding: 0 !important;
   border: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
 }
 
+/* 36. Mega Menu 内部内容的布局 */
 .shop-mega-menu .mega-menu-content {
   display: flex;
-  padding: 40px 50px;
-  gap: 60px;
+  /* padding: 上下内边距  左右内边距; */
+  /* ↓↓↓ 修改这里的第二个值来调整左右内边距 ↓↓↓ */
+  padding: 40px 60px; /* 例如，从 50px 增大到 60px */
+  gap: 120px;
 }
 
-/* Left Column: Navigation Links */
+/* 37. 左侧导航链接列的样式 */
 .shop-mega-menu .mega-menu-nav {
   flex-shrink: 0;
   border-right: 1px solid #f0f0f0;
   padding-right: 50px;
 
   .mega-menu-title {
-    font-size: 16px;
+    font-size: 40px;
     font-weight: 600;
     color: #909399;
-    margin: 0 0 25px 0;
+    margin: 0 0 65px 0;
     text-transform: uppercase;
   }
   
@@ -307,67 +296,109 @@ const featuredCategories = computed(() => {
     list-style: none;
     padding: 0;
     margin: 0;
-    li {
-      margin-bottom: 20px;
-    }
+    /* ↓↓↓ 修改这里的数值来调整链接之间的垂直间距 ↓↓↓ */
+    li { margin-bottom: 40px; }
   }
 
-  .mega-menu-link {
-    font-size: 22px;
+  /* 这是一个SCSS嵌套规则，它会选中所有 .mega-menu-link 类的元素 */
+.mega-menu-link {
+    /* 设置字体大小为 30 像素 */
+    font-size: 35px;
+    /* 设置字体粗细为 700 (等同于 'bold'，粗体) */
     font-weight: 700;
+    /* 设置文字颜色为深灰色 (#303133) */
     color: #303133;
+    /* 移除文字下方的下划线 */
     text-decoration: none;
+    /* 为颜色变化添加一个0.2秒的平滑过渡动画效果 */
     transition: color 0.2s;
     
-    &:hover {
-      color: var(--el-color-primary);
+    /* & 代表当前选择器(.mega-menu-link)，&:hover 设置鼠标悬浮在链接上时的样式 */
+    &:hover { 
+        /* 将文字颜色变为 Element Plus 的主题色 (通常是蓝色) */
+        color: var(--el-color-primary); 
     }
 
+    /* & 代表当前选择器(.mega-menu-link)，&.all-items-link 选中同时拥有这两个类的元素 */
     &.all-items-link {
-      margin-top: 25px;
-      display: inline-block;
-      font-size: 18px;
-      color: var(--el-color-primary);
+        /* 设置距离上方元素的间距为 25 像素 */
+        margin-top: 25px;
+        /* 将元素设置为行内块级元素，使其可以拥有上下外边距 */
+        display: inline-block;
+        /* 覆盖上面设置的字体大小，将这个特定链接的字号设为 18 像素 */
+        font-size: 38px;
+        /* 覆盖上面设置的颜色，将这个特定链接的颜色设为 Element Plus 的主题色 */
+        color: var(--el-color-primary);
     }
-  }
+} 
 }
 
-/* Right Column: Product Previews */
+/* 38. 右侧产品预览区域的样式 */
 .shop-mega-menu .mega-menu-previews {
   display: flex;
   flex-grow: 1;
-  gap: 25px;
-  justify-content: flex-start;
+  gap: 45px;    /* 例如，将间距从25px增大到30px */
+  justify-content: space-between;
 }
 
+/* 39. 单个产品预览卡的样式 */
+/* 选中所有 .mega-menu-preview-card 类的元素 */
 .mega-menu-preview-card {
-  display: block;
-  text-decoration: none;
-  width: 220px;
-  border-radius: 15px;
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-  }
-
-  .preview-image {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
+    /* 将元素设置为块级元素，使其占据一整行 */
     display: block;
-    background-color: #f5f7fa;
-  }
+    /* 移除文字下方的下划线 */
+    text-decoration: none;
+   /* 关键：我们不再使用固定的宽度，而是让它自动填充 */
+    flex: 1; /* 让每个卡片平均占据所有可用空间 */
+    min-width: 420px; /* 可以设置一个最小宽度，防止过度压缩 */
 
-  .preview-name {
-    display: block;
-    padding: 12px;
-    background-color: #f8f9fa;
-    color: #333;
-    font-weight: 500;
-    text-align: center;
-  }
+    /* 设置卡片的圆角为 15 像素 */
+    border-radius: 15px;
+    /* 隐藏超出圆角部分的内容 */
+    overflow: hidden;
+    /* 为 transform 和 box-shadow 属性的变化添加一个0.2秒的平滑过渡动画 */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    display: block; /* 移除图片下方可能的空隙 */
+    background-color: #161616; /* 为留白区域设置一个背景色 */
+    /* & 代表当前选择器(.mega-menu-preview-card)，&:hover 设置鼠标悬浮在卡片上时的样式 */
+    &:hover {
+        /* 将卡片向上移动 5 像素 */
+        transform: translateY(-5px);
+        /* 为卡片添加一个更明显的阴影效果 */
+        box-shadow: 0 6px 12px rgba(175, 115, 115, 0.08);
+    }
+
+    /* 选中卡片内部的 .preview-image 元素 */
+    .preview-image {
+        /* 设置图片宽度为100%，撑满卡片 */
+        width: 100%;
+        /* 设置图片的固定高度为 180 像素 */
+        height: 400px;
+        /* 保持图片宽高比，放大并裁剪多余部分以填充整个容器 */
+        object-fit: cover;
+        /* 将图片设置为块级元素，移除下方可能的空隙 */
+        display: block;
+        /* 设置一个浅灰色背景，作为图片加载时的占位颜色 */
+        background-color: #f5f7fa;
+    }
+
+    /* 选中卡片内部的 .preview-name 元素 */
+    .preview-name {
+        /* 将其设置为块级元素 */
+        display: block;
+        /* 设置内部的上下左右内边距为 12 像素 */
+        padding: 12px;
+        /* 设置背景色为浅灰色 */
+        background-color: #f8f9fa;
+        /* 设置文字颜色 */
+        color: #333;
+        /* 设置字体粗细为 500 (中等粗细) */
+        font-weight: 500;
+        /* 设置文字水平居中对齐 */
+        text-align: center;
+    }
 }
+
+
 </style>

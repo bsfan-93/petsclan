@@ -35,7 +35,7 @@ onMounted(async () => {
   aspect-ratio: 16 / 9;
   
   /* Option 2: Use viewport height (e.g., 80% of the screen height) */
-  height: 95vh;
+  height: 90vh;
 
   /* Set a max-height to prevent it from being too tall on large screens */
   

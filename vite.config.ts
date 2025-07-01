@@ -58,6 +58,7 @@ export default defineConfig({
   server: {
     port: 3000, // 开发服务器端口
     open: true, // 自动打开浏览器
+    host: true // 设置为 true, Vite 将监听所有地址，包括局域网和公网地址
     // 如果需要代理API请求，可以在这里配置
     // proxy: {
     //   '/api': {
