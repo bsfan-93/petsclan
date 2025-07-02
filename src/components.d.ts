@@ -38,6 +38,7 @@ declare module 'vue' {
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     ExpandingSearchBar: typeof import('./components/features/ExpandingSearchBar.vue')['default']
+    FullScreenSearch: typeof import('./components/features/FullScreenSearch.vue')['default']
     HealthSection: typeof import('./components/features/HealthSection.vue')['default']
     HomePage: typeof import('./views/HomePage.vue')['default']
     LanguageSwitcher: typeof import('./components/features/LanguageSwitcher.vue')['default']

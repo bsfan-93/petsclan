@@ -210,12 +210,24 @@ export async function fetchSearchResults(keyword: string): Promise<SearchResultI
     return [];
   }
   try {
-    const url = `${API_BASE_URL}/standalones/good/search?keyword=${encodeURIComponent(keyword)}`;
-    const response = await fetch(url);
+    const url = `${API_BASE_URL}/standalones/good/search`; // POST请求，URL中不再需要参数
+
+    // --- 以下是主要修改点 ---
+    const response = await fetch(url, {
+      method: 'POST', // 1. 明确指定请求方法为 POST
+      headers: {
+        'Content-Type': 'application/json', // 2. 告诉后端我们发送的是JSON格式的数据
+      },
+      // 3. 将搜索关键词放在请求体(body)中
+      body: JSON.stringify({ name: keyword }), 
+    });
+    // --- 修改结束 ---
+
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const apiResponse = await response.json();
+
     if (apiResponse.success && Array.isArray(apiResponse.data)) {
       return apiResponse.data.map((item: any) => ({
         ...item,

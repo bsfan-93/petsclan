@@ -11,7 +11,8 @@
     "aboutUs": "About Us",
     "app": "App",
     "shop_all": "Shop All" ,
-    "searchPlaceholder": "Search..."
+    "searchPlaceholder": "Search...",
+    "aboutUs_story": "Our Story"
   },
   "footer": {
     "company": {
@@ -39,5 +40,16 @@
       "title": "Sign up for 10% off your first order",
       "email_placeholder": "E-mail"
     }
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "total": "Total",
+    "checkout": "Checkout"
+  },
+  "search": {
+    "title": "Search Results",
+    "resultsFor": "Showing results for",
+    "noQuery": "Please enter a search term to begin."
   }
 }

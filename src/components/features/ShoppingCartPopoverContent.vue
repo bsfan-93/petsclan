@@ -53,15 +53,16 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useCartStore } from '@/store/modules/cart';
 import { Delete, ShoppingCartFull } from '@element-plus/icons-vue';
+import { ElPopover } from 'element-plus'; // Import if needed for type, though not strictly necessary here
 
 const { t } = useI18n();
 const router = useRouter();
 const cartStore = useCartStore();
 
-// const goToCartPage = () => {
-//   // router.push({ name: 'Cart' }); // TODO: Add a cart page route
-//   console.log('Navigate to cart page or checkout');
-// };
+const goToCartPage = () => {
+  router.push({ name: 'Cart' }); // TODO: Add a cart page route
+  // console.log('Navigate to cart page or checkout');
+};
 </script>
 
 <style scoped lang="scss">

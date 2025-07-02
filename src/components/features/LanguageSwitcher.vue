@@ -71,26 +71,37 @@ const handleLanguageChange = (langCode: string | number | object) => {
   align-items: center;
   justify-content: center; /* 确保简写文本水平居中 */
 
-  /* 需求2: 调整样式大小 */
-  padding: 4px 14px;      /* 增加了内边距，让按钮更大 (原: 4px 10px) */
-  font-size: 16px;        /* 增大了字体大小 (原: 11px) */
-  font-weight: 600;       /* 让字体稍微加粗，更有质感 */
-  min-width: 55px;        /* 设置一个最小宽度，防止按钮因内容少而变得过窄 */
-  box-sizing: border-box; /* 确保 padding 不会影响总宽度计算 */
+  /* --- 1. 颜色和背景 --- */
+  background-color: #ffffff; /* 背景色改为黑色 */
+  color: #000000;             /* 文字颜色改为白色 */
 
-  /* 以下为原有样式，保持不变 */
-  border-radius: 18px;    /* 稍微增大了圆角以匹配更大的尺寸 */
-  border: 1px solid #e0e0e0;
-  background-color: #f5f7fa;
-  color: #5a5a5a;
+  /* --- 2. 尺寸和边框 --- */
+  padding: 6px 12px;
+  min-width: 60px;
+  height: 38px; /* 您可以按需调整高度 */
+  box-sizing: border-box;
+  border-radius: 19px; /* 高度的一半，使其完全圆润 */
+  border: none; /* 移除了边框 */
+
+    /* --- 3. 字体样式 --- */
+  font-size: 14px;
+  font-weight: 600;
   
-  &:hover {
-    border-color: var(--el-color-primary);
-    color: var(--el-color-primary);
-  }
+  transition: transform 0.2s ease-in-out; /* 新增：平滑过渡动画 */
 
-  .el-icon--right {
-    margin-left: 5px; /* 调整箭头与文字的距离 */
+  &:hover {
+    transform: scale(1.1); /* 新增：鼠标悬浮时放大到110% */
   }
 }
+
+   /* --- 4. 箭头样式调整 --- */
+  .el-icon--right {
+    margin-left: 4px; /* 让箭头贴着EN */
+    font-size: 10px;  /* 减小箭头大小 */
+    
+
+    /* 使用 transform scale 来实现视觉上的加粗效果 */
+    transform: scale(1.5, 1.8); 
+  }
+
 </style>

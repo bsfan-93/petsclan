@@ -39,7 +39,7 @@
         </template>
       </Carousel>
     </div>
-
+    
     <HealthSection />
     
     <SubscriptionModal />
@@ -51,6 +51,8 @@
 
 // 从 'vue' 中导入核心功能：ref用于创建响应式变量，onMounted是生命周期钩子，computed是计算属性，watchEffect用于响应式地执行副作用
 import { ref, onMounted, computed, watchEffect } from 'vue';
+import { useWindowSize } from '@vueuse/core'; //  引入 useWindowSize
+import 'vue3-carousel/dist/carousel.css';
 // 从 'vue3-carousel' 库中导入轮播图相关的组件
 import { Carousel, Navigation, Slide } from 'vue3-carousel';
 // 导入轮播图库所需的基础CSS样式
@@ -84,6 +86,7 @@ function preloadImages(urls: string[]) {
   });
 }
 
+const { width } = useWindowSize(); // 3. 获取响应式的窗口宽度
 // 3. 声明组件所需的状态
 // 创建一个名为 'products' 的响应式数组，用于存储产品卡片的数据
 const products = ref<ProductCardData[]>([]);
@@ -94,13 +97,22 @@ const contentStore = useContentStore();
 // 创建一个计算属性 'followImages'，它的值会自动从 contentStore.images 中获取
 const followImages = computed(() => contentStore.images);
 // 定义一个对象，存储轮播图的所有配置参数
-const carouselSettings = {
-  itemsToShow: 3, // 同时显示2.5个项目
-  snapAlign: 'center', // 对齐方式为居中
-  wrapAround: true, // 开启无限循环滚动
-  autoplay: 5000, // 每5秒自动播放
-  transition: 500, // 过渡动画时间为500毫秒
-};
+const carouselSettings = computed(() => {
+  let itemsToShow = 3; // 默认显示3个
+  if (width.value < 768) { // 平板尺寸
+    itemsToShow = 1.5;
+  }
+  if (width.value < 480) { // 手机尺寸
+    itemsToShow = 1.2;
+  }
+  return {
+    itemsToShow, // 使用动态计算的值
+    snapAlign: 'center',
+    wrapAround: true,
+    autoplay: 5000,
+    transition: 500,
+  };
+});
 
 // 4. 使用 watchEffect 自动预加载图片
 // watchEffect 会自动追踪其内部依赖的数据（这里是 followImages）

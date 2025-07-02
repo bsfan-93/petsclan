@@ -11,6 +11,7 @@
         </router-view>
       </main>
       <AppFooter />
+      <FullScreenSearch />
     </div>
   </el-config-provider>
 </template>
@@ -24,7 +25,7 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import TopNotification from '@/components/layout/TopNotification.vue';
 import NavigationBar from '@/components/layout/NavigationBar.vue';
 import AppFooter from '@/components/layout/AppFooter.vue';
-import SubscriptionModal from '@/components/features/SubscriptionModal.vue'; // ✨ 导入订阅弹窗组件
+import FullScreenSearch from '@/components/features/FullScreenSearch.vue'; // <--- 新增导入
 
 const { locale } = useI18n();
 const currentElementPlusLocale = computed(() => (locale.value === 'zh' ? zhCn : en));
@@ -45,4 +46,5 @@ html, body, .app-main-content {
 .fade-enter-from, .fade-leave-to { 
   opacity: 0; 
 }
+
 </style>

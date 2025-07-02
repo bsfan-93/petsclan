@@ -4,14 +4,16 @@ import { defineStore } from 'pinia';
 interface UiState {
   isSearchVisible: boolean;
   headerHeight: number;
-  isSubscriptionModalVisible: boolean; // ✨ 新增状态
+  isSubscriptionModalVisible: boolean;
+  isFullScreenSearchVisible: boolean; // <--- 新增：控制全屏搜索的可见性
 }
 
 export const useUiStore = defineStore('ui', {
   state: (): UiState => ({
     isSearchVisible: false,
     headerHeight: 60,
-    isSubscriptionModalVisible: false, // ✨ 新增状态
+    isSubscriptionModalVisible: false,
+    isFullScreenSearchVisible: false, // <--- 新增
   }),
   actions: {
     toggleSearch(visible?: boolean) {
@@ -20,9 +22,12 @@ export const useUiStore = defineStore('ui', {
     setHeaderHeight(height: number) {
       this.headerHeight = height;
     },
-    // ✨ 新增 action
     setSubscriptionModalVisible(visible: boolean) {
       this.isSubscriptionModalVisible = visible;
+    },
+    // <--- 新增 Action ---
+    setFullScreenSearchVisible(visible: boolean) {
+      this.isFullScreenSearchVisible = visible;
     },
   },
 });
